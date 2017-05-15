@@ -1,0 +1,36 @@
+﻿Build started 6/25/2013 2:27:02 PM.
+     1>Project "C:\SVN\Research\CFT\Auto Framework\EcomCat\ecomcat_api\ecomcat_api\ecomcat_api.vcxproj" on node 3 (build target(s)).
+     1>InitializeBuildStatus:
+         Creating "Debug\ecomcat_api.unsuccessfulbuild" because "AlwaysCreate" was specified.
+       ClCompile:
+         All outputs are up-to-date.
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TC /analyze- /errorReport:prompt api_file.c
+         api_file.c
+     1>c:\svn\research\cft\auto framework\ecomcat\ecomcat_api\ecomcat_api\api_file.c(231): warning C4142: benign redefinition of type
+     1>c:\svn\research\cft\auto framework\ecomcat\ecomcat_api\ecomcat_api\api_file.c(497): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
+     1>c:\svn\research\cft\auto framework\ecomcat\ecomcat_api\ecomcat_api\api_file.c(533): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+                 c:\program files (x86)\microsoft visual studio 10.0\vc\include\stdio.h(234) : see declaration of 'fopen'
+     1>c:\svn\research\cft\auto framework\ecomcat\ecomcat_api\ecomcat_api\api_file.c(587): warning C4018: '<' : signed/unsigned mismatch
+       ManifestResourceCompile:
+         All outputs are up-to-date.
+       Link:
+         c:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"C:\SVN\Research\CFT\Auto Framework\EcomCat\ecomcat_api\Debug\ecomcat_api.dll" /INCREMENTAL /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /ManifestFile:"Debug\ecomcat_api.dll.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"C:\SVN\Research\CFT\Auto Framework\EcomCat\ecomcat_api\Debug\ecomcat_api.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"C:\SVN\Research\CFT\Auto Framework\EcomCat\ecomcat_api\Debug\ecomcat_api.lib" /MACHINE:X86 /DLL Debug\ecomcat_api.dll.embed.manifest.res
+         Debug\api_file.obj
+         Debug\stdafx.obj
+         ecommlib.lib
+            Creating library C:\SVN\Research\CFT\Auto Framework\EcomCat\ecomcat_api\Debug\ecomcat_api.lib and object C:\SVN\Research\CFT\Auto Framework\EcomCat\ecomcat_api\Debug\ecomcat_api.exp
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /out:"Debug\ecomcat_api.dll.embed.manifest" /manifest Debug\ecomcat_api.dll.intermediate.manifest
+         All outputs are up-to-date.
+       LinkEmbedManifest:
+         All outputs are up-to-date.
+         ecomcat_api.vcxproj -> C:\SVN\Research\CFT\Auto Framework\EcomCat\ecomcat_api\Debug\ecomcat_api.dll
+       FinalizeBuildStatus:
+         Deleting file "Debug\ecomcat_api.unsuccessfulbuild".
+         Touching "Debug\ecomcat_api.lastbuildstate".
+     1>Done Building Project "C:\SVN\Research\CFT\Auto Framework\EcomCat\ecomcat_api\ecomcat_api\ecomcat_api.vcxproj" (build target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.94

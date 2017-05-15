@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ecomcat_api", "ecomcat_api\ecomcat_api.vcxproj", "{8C7D5D91-37E6-43F6-8BA4-89584E036732}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test_api", "test_api\test_api.vcxproj", "{E76CDB5C-F3D9-48A0-9972-0C1CEEBA7D02}"
+	ProjectSection(ProjectDependencies) = postProject
+		{8C7D5D91-37E6-43F6-8BA4-89584E036732} = {8C7D5D91-37E6-43F6-8BA4-89584E036732}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CarLib", "CarLib\CarLib.vcxproj", "{9DCE6AEE-F07B-48F0-88A2-0E60453373D0}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CarLib_Test", "CarLib_Test\CarLib_Test.vcxproj", "{A5B0FD28-F1F8-4252-913F-20B9347B87C4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9DCE6AEE-F07B-48F0-88A2-0E60453373D0} = {9DCE6AEE-F07B-48F0-88A2-0E60453373D0}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CarControl", "CarControl\CarControl.vcxproj", "{50ACE6CC-B9B6-455F-8658-FCC764AF42A3}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "can_bridge", "can_bridge\can_bridge.vcxproj", "{38F0A7C4-E4B1-4B14-BBE3-7FAC1142AF9B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8C7D5D91-37E6-43F6-8BA4-89584E036732}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8C7D5D91-37E6-43F6-8BA4-89584E036732}.Debug|Win32.Build.0 = Debug|Win32
+		{8C7D5D91-37E6-43F6-8BA4-89584E036732}.Release|Win32.ActiveCfg = Release|Win32
+		{8C7D5D91-37E6-43F6-8BA4-89584E036732}.Release|Win32.Build.0 = Release|Win32
+		{E76CDB5C-F3D9-48A0-9972-0C1CEEBA7D02}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E76CDB5C-F3D9-48A0-9972-0C1CEEBA7D02}.Debug|Win32.Build.0 = Debug|Win32
+		{E76CDB5C-F3D9-48A0-9972-0C1CEEBA7D02}.Release|Win32.ActiveCfg = Release|Win32
+		{E76CDB5C-F3D9-48A0-9972-0C1CEEBA7D02}.Release|Win32.Build.0 = Release|Win32
+		{9DCE6AEE-F07B-48F0-88A2-0E60453373D0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9DCE6AEE-F07B-48F0-88A2-0E60453373D0}.Debug|Win32.Build.0 = Debug|Win32
+		{9DCE6AEE-F07B-48F0-88A2-0E60453373D0}.Release|Win32.ActiveCfg = Release|Win32
+		{9DCE6AEE-F07B-48F0-88A2-0E60453373D0}.Release|Win32.Build.0 = Release|Win32
+		{A5B0FD28-F1F8-4252-913F-20B9347B87C4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A5B0FD28-F1F8-4252-913F-20B9347B87C4}.Debug|Win32.Build.0 = Debug|Win32
+		{A5B0FD28-F1F8-4252-913F-20B9347B87C4}.Release|Win32.ActiveCfg = Release|Win32
+		{A5B0FD28-F1F8-4252-913F-20B9347B87C4}.Release|Win32.Build.0 = Release|Win32
+		{50ACE6CC-B9B6-455F-8658-FCC764AF42A3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{50ACE6CC-B9B6-455F-8658-FCC764AF42A3}.Debug|Win32.Build.0 = Debug|Win32
+		{50ACE6CC-B9B6-455F-8658-FCC764AF42A3}.Release|Win32.ActiveCfg = Release|Win32
+		{50ACE6CC-B9B6-455F-8658-FCC764AF42A3}.Release|Win32.Build.0 = Release|Win32
+		{38F0A7C4-E4B1-4B14-BBE3-7FAC1142AF9B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{38F0A7C4-E4B1-4B14-BBE3-7FAC1142AF9B}.Debug|Win32.Build.0 = Debug|Win32
+		{38F0A7C4-E4B1-4B14-BBE3-7FAC1142AF9B}.Release|Win32.ActiveCfg = Release|Win32
+		{38F0A7C4-E4B1-4B14-BBE3-7FAC1142AF9B}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
