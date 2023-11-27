@@ -24,7 +24,7 @@ if __name__ == "__main__":
 
     NOCHECK = 1
 
-    while(1):
+    while 1:
 
         #read_by_wid = ecom.mydll.read_message_by_wid_with_timeout
         #read_by_wid.restype = POINTER(SFFMessage)
@@ -33,12 +33,12 @@ if __name__ == "__main__":
         #if(sff_resp[0].data[0] == 0xC2):
         #    SFFS[0] = sff_resp[0]
         #    break
-    
+
         #increment two bytes
         X1 = SFFS[0].data[0]
         X2 = SFFS[0].data[1]
-        if(X2 == 0xFF):
-            if(X1 < 0xC9):
+        if (X2 == 0xFF):
+            if (X1 < 0xC9):
                 X1 += 1
 
         #X2
@@ -46,22 +46,22 @@ if __name__ == "__main__":
 
         SFFS[0].data[0] = X1
         SFFS[0].data[1] = X2
-        
-        for i in range(0, 2):
+
+        for _ in range(0, 2):
             Y1 = SFFS[0].data[3]
             Y2 = SFFS[0].data[4]
-            if(Y2 == 0xFF):
-                if(Y1 < 0xFF):
+            if (Y2 == 0xFF):
+                if (Y1 < 0xFF):
                     Y1 += 1
 
             #Y2
             Y2 += 1 & 0xFF
 
             SFFS[0].data[3] = Y1
-            SFFS[0].data[4] = Y2            
+            SFFS[0].data[4] = Y2
             ecom.mydll.PrintSFF(pointer(SFFS[0]), 0)
 
             ecom.mydll.FixChecksum(pointer(SFFS[0]))
-            
+
             ecom.mydll.write_message(ecom.handle, pointer(SFFS[0]))
             #time.sleep(.005)

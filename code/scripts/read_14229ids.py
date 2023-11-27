@@ -11,10 +11,7 @@ if(len(sys.argv) < 2):
 file_a = sys.argv[1]
 
 def direction_to_string(direction):
-	if direction == toserver:
-		return ">> "
-	else:
-		return "<< "
+    	return ">> " if direction == toserver else "<< "
 
 id_strings = {	0x10: "DiagnosticSessionControl",
 		0x11: "ECUReset",
@@ -46,23 +43,19 @@ id_strings = {	0x10: "DiagnosticSessionControl",
 		0x18: "readDiagnosticTroubleCodesByStatus"}
 
 def get_id_string(id):
-	prefix = ""
-	if (0x10 <= id and id <= 0x3e) or (0x80 <= id and id <= 0xbe):
-		prefix = "Request_"
+    	prefix = ""
+    	if 0x10 <= id <= 0x3E or 0x80 <= id <= 0xBE:
+    	    	prefix = "Request_"
 
-	if (0x50 <= id and id <= 0x7e) or (0xc0 <= id and id <= 0xfe):
-		prefix = "PosResponse_"
-		id -= 0x40
+    	if 0x50 <= id <= 0x7E or 0xC0 <= id <= 0xFE:
+    	    	prefix = "PosResponse_"
+    	    	id -= 0x40
 
-	if id == 0x7f:
-		return "NegResponse"	
+    	if id == 0x7f:
+    		return "NegResponse"	
 
-        if id_strings.has_key(id):
-                id_s = prefix + id_strings[id]
-        else:
-                id_s = prefix + "UNKNOWN_%02x" % id
-
-	return id_s
+    	return (prefix + id_strings[id] if id_strings.has_key(id) else prefix +
+    	        "UNKNOWN_%02x" % id)
 
 def handle_data(payload, len, direction, line_num):
 	id = int(payload[0:2],16)

@@ -6,9 +6,9 @@ class SFFMessage:
         #break out the pieces
         pieces = line.split(',')
 
-        if(len(pieces) > 3):
+        if (len(pieces) > 3):
             self.idh = pieces[0].split(':')[1].strip()
-            self.idl = pieces[1].split(':')[1].strip() 
+            self.idl = pieces[1].split(':')[1].strip()
             self.wid = self.idh + self.idl
             self.len = pieces[2].split(':')[1].strip()
 
@@ -16,10 +16,11 @@ class SFFMessage:
             data_ts = pieces[3].split(':')[1]
             ts_offset = data_ts.find("TS")
 
-            if(ts_offset != 0):
-                self.data = data_ts[:ts_offset].strip()
-            else:
-                self.data = data_ts.strip()
+            self.data = (
+                data_ts[:ts_offset].strip()
+                if (ts_offset != 0)
+                else data_ts.strip()
+            )
 	#if(len(pieces) > 4):
 	#    self.ts = pieces[4].split(':')[1]
 

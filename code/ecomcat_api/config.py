@@ -54,86 +54,117 @@ TP_MainSwitch = 0xEC
 TP_PowerSource = 0xE9
 
 #Prius ECU to String name table (Main body is in another section)
-PriusECU = {}
-PriusECU[TP_Transmission] = "Transmission"
-PriusECU[TP_AirBag] = "AirBag"
-PriusECU[TP_PreCollision1] = "Pre-Collision"
-PriusECU[TP_Radar] = "Radar"
-PriusECU[TP_PreCollision2] = "Pre-Collision 2"
-PriusECU[TP_EPMS] = "EPMS"
-PriusECU[TP_APGS] = "APGS - Park Assist"
-PriusECU[TP_ABS] = "ABS - Anti-Lock Braking"
-PriusECU[TP_ComboMeter] = "Combo Meter"
-PriusECU[TP_AC] = "Air Conditioning"
-PriusECU[TP_Nav] = "Navigation"
-PriusECU[TP_ECT] = "ECT - Engine"
-PriusECU[TP_Hybrid] = "Hybrid System"
-
-PriusMainECU = {}
-PriusMainECU[TP_LKA] = "Lane Keep Assist (LKA)"
-PriusMainECU[TP_MainBody] = "Main Body"
-PriusMainECU[TP_PM1] = "PM1 Gateway"
-PriusMainECU[TP_PM2] = "PM2 Gateway"
-PriusMainECU[TP_HLAutoLevel] = "Headlamp Autolevel"
-PriusMainECU[TP_DDoor] = "Driver Door"
-PriusMainECU[TP_PDoor] = "Passenger Door"
-PriusMainECU[TP_RRDoor] = "Rear Right Door"
-PriusMainECU[TP_RLDoor] = "Rear Left Door"
-PriusMainECU[TP_SR] = "Sliding Roof"
-PriusMainECU[TP_SmartKey] = "Smart Key"
-PriusMainECU[TP_RemoteStart] = "Remote Engine Starter"
-PriusMainECU[TP_MainSwitch] = "Main Switch"
-PriusMainECU[TP_PowerSource] = "Power Source Control"
-
+PriusECU = {
+    TP_Transmission: "Transmission",
+    TP_AirBag: "AirBag",
+    TP_PreCollision1: "Pre-Collision",
+    TP_Radar: "Radar",
+    TP_PreCollision2: "Pre-Collision 2",
+    TP_EPMS: "EPMS",
+    TP_APGS: "APGS - Park Assist",
+    TP_ABS: "ABS - Anti-Lock Braking",
+    TP_ComboMeter: "Combo Meter",
+    TP_AC: "Air Conditioning",
+    TP_Nav: "Navigation",
+    TP_ECT: "ECT - Engine",
+    TP_Hybrid: "Hybrid System",
+}
+PriusMainECU = {
+    TP_LKA: "Lane Keep Assist (LKA)",
+    TP_MainBody: "Main Body",
+    TP_PM1: "PM1 Gateway",
+    TP_PM2: "PM2 Gateway",
+    TP_HLAutoLevel: "Headlamp Autolevel",
+    TP_DDoor: "Driver Door",
+    TP_PDoor: "Passenger Door",
+    TP_RRDoor: "Rear Right Door",
+    TP_RLDoor: "Rear Left Door",
+    TP_SR: "Sliding Roof",
+    TP_SmartKey: "Smart Key",
+    TP_RemoteStart: "Remote Engine Starter",
+    TP_MainSwitch: "Main Switch",
+    TP_PowerSource: "Power Source Control",
+}
 #Diagnostic custom payloads
-PriusDiagData = {}
-PriusDiagData[TP_ABS] = [0x10, 0x01]
-
+PriusDiagData = {TP_ABS: [0x10, 0x01]}
 #SecurityAccess custom payloads
-PriusSAData = {}
-PriusSAData[TP_ABS] = [0x27, 0x01, 0x00]
-
-#Hopefully 
-PriusEffectiveKeys = {}
-PriusEffectiveKeys[TP_ABS] = 0x00252500
-
+PriusSAData = {TP_ABS: [0x27, 0x01, 0x00]}
+#Hopefully
+PriusEffectiveKeys = {TP_ABS: 2434304}
 #These are InputOutputControlByLocalIdentifier (0x30). See 14230-3.pdf 
 #Prius Commands
-PriusCMD = {}
-PriusCMD["Seat_Belt_Drive"] = {'Desc':"Engage driver's seatbelt motor", 'ID':TP_PreCollision1, 'Data':[0x30, 0x01, 0x00, 0x01]}
-PriusCMD["Fuel_Cut_All"] = {'Desc':"Cut fuel to all cylinders", 'ID':TP_ECT, 'Data':[0x30, 0x1C, 0x00, 0x0F, 0xA5,0x01]} #does not work at speed
-
+PriusCMD = {
+    "Seat_Belt_Drive": {
+        'Desc': "Engage driver's seatbelt motor",
+        'ID': TP_PreCollision1,
+        'Data': [0x30, 0x01, 0x00, 0x01],
+    },
+    "Fuel_Cut_All": {
+        'Desc': "Cut fuel to all cylinders",
+        'ID': TP_ECT,
+        'Data': [0x30, 0x1C, 0x00, 0x0F, 0xA5, 0x01],
+    },
+}
 #These are InputOutputControlByLocalIdentifier (0x30). See 14230-3.pdf 
 #These all use WID 0x750 with the first data byte being the SubID
-PriusMBCMD = {}
-PriusMBCMD["Headlamps_On"] = {'Desc':"Turn off the head lamps", 'SubID':TP_MainBody, 'Data':[0x30, 0x15, 0x00, 0x40, 0x00]}
-PriusMBCMD["Headlamps_Off"] = {'Desc':"Turn off the head lamps (Only works if in Auto-Mode)", 'SubID':TP_MainBody, 'Data':[0x30, 0x15, 0x00, 0x00, 0x00]}
-PriusMBCMD["Horn_On"] = {'Desc':"Horn activated for several seconds", 'SubID':TP_MainBody, 'Data':[0x30, 0x06, 0x00, 0x20]}
-PriusMBCMD["Horn_Off"] = {'Desc':"Deactivate Horn", 'SubID':TP_MainBody, 'Data':[0x30, 0x06, 0x00, 0x00]}
-PriusMBCMD["Lock_All_Doors"] = {'Desc':"Lock All Doors", 'SubID':TP_MainBody, 'Data':[0x30, 0x11, 0x00, 0x80, 0x00]}
-PriusMBCMD["Unlock_All_Doors"] = {'Desc':"Unlock All Doors", 'SubID':TP_MainBody, 'Data':[0x30, 0x11, 0x00, 0x40, 0x00]}
-PriusMBCMD["Unlock_Hatch"] = {'Desc':"Unlock the Hatch", 'SubID':TP_MainBody, 'Data':[0x30, 0x11, 0x00, 0x00, 0x80]}
-
+PriusMBCMD = {
+    "Headlamps_On": {
+        'Desc': "Turn off the head lamps",
+        'SubID': TP_MainBody,
+        'Data': [0x30, 0x15, 0x00, 0x40, 0x00],
+    },
+    "Headlamps_Off": {
+        'Desc': "Turn off the head lamps (Only works if in Auto-Mode)",
+        'SubID': TP_MainBody,
+        'Data': [0x30, 0x15, 0x00, 0x00, 0x00],
+    },
+    "Horn_On": {
+        'Desc': "Horn activated for several seconds",
+        'SubID': TP_MainBody,
+        'Data': [0x30, 0x06, 0x00, 0x20],
+    },
+    "Horn_Off": {
+        'Desc': "Deactivate Horn",
+        'SubID': TP_MainBody,
+        'Data': [0x30, 0x06, 0x00, 0x00],
+    },
+    "Lock_All_Doors": {
+        'Desc': "Lock All Doors",
+        'SubID': TP_MainBody,
+        'Data': [0x30, 0x11, 0x00, 0x80, 0x00],
+    },
+    "Unlock_All_Doors": {
+        'Desc': "Unlock All Doors",
+        'SubID': TP_MainBody,
+        'Data': [0x30, 0x11, 0x00, 0x40, 0x00],
+    },
+    "Unlock_Hatch": {
+        'Desc': "Unlock the Hatch",
+        'SubID': TP_MainBody,
+        'Data': [0x30, 0x11, 0x00, 0x00, 0x80],
+    },
+}
 #2010 Ford Escape
 FordDiagCode = 0x02
 
 #Escape ECU to string name table
-FordECU = {}
-FordECU[0x0701] = "GPSM"
-FordECU[0x0720] = "IC"
-FordECU[0x0726] = "SJB"
-FordECU[0x0727] = "ACM"
-FordECU[0x0730] = "PSCM"
-FordECU[0x0733] = "HVAC"
-FordECU[0x0736] = "PAM"
-FordECU[0x0737] = "RCM"
-FordECU[0x0760] = "ABS"
-FordECU[0x0761] = "4x4"
-FordECU[0x0765] = "OCSM"
-FordECU[0x07A6] = "FDIM"
-FordECU[0x07A7] = "FCIM"
-FordECU[0x07D0] = "APIM"
-FordECU[0x07E0] = "PCM"
+FordECU = {
+    1793: "GPSM",
+    1824: "IC",
+    1830: "SJB",
+    1831: "ACM",
+    1840: "PSCM",
+    1843: "HVAC",
+    1846: "PAM",
+    1847: "RCM",
+    1888: "ABS",
+    1889: "4x4",
+    1893: "OCSM",
+    1958: "FDIM",
+    1959: "FCIM",
+    2000: "APIM",
+    2016: "PCM",
+}
 
 
 

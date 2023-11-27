@@ -577,12 +577,11 @@ def do_proprietary(mydll, handle, wid, did, options):
 
 # returns if it was able to get a valid response
 def try_key(mydll, handle, wid, key):
-	key1 = (key & 0xff0000) >> 16
-	key2 = (key & 0xff00) >> 8
-	key3 = (key & 0xff)
+    key1 = (key & 0xff0000) >> 16
+    key2 = (key & 0xff00) >> 8
+    key3 = (key & 0xff)
 
-	ret = send_data(mydll, handle, wid, [0x27,2,key1,key2,key3])
-	return ret
+    return send_data(mydll, handle, wid, [0x27,2,key1,key2,key3])
 
 # need to loop
 def brute_force_key(mydll, handle, wid):
@@ -690,10 +689,7 @@ def kill_engine(mydll, handle, time):
 
 def listify(thestring):
     l = list(thestring)
-    ret = []
-    for x in l:
-        ret += [struct.unpack('B', x)[0]]
-    return ret
+    return [struct.unpack('B', x)[0] for x in l]
 
 def do_download_compliant(mydll, handle, wid, address, filename):
         address1 = (address & 0xff000000) >> 24

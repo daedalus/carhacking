@@ -6,12 +6,11 @@ def FixMotCRC(mot_str):
 
     if mot_str == "":
         return mot_str
-    
-    data_checksum = 0
-    s_type = mot_str[0:2]
+
+    s_type = mot_str[:2]
     s_len = int(mot_str[2:4], 16)
 
-    data_checksum += s_len
+    data_checksum = 0 + s_len
     #print "SLen: %02X" % (s_len)
 
     curr_index = 4
@@ -36,7 +35,7 @@ def FixMotCRC(mot_str):
 
     #print "checksum: %02X" % (~data_checksum & 0xFF)
 
-    return mot_str[0:-2] + "%02X" % (~data_checksum & 0xFF)
+    return mot_str[:-2] + "%02X" % (~data_checksum & 0xFF)
 
 fixed_fp = open(filename+".fixed", "wb+")
 
