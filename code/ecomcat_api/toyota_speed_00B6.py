@@ -16,10 +16,10 @@ if __name__ == "__main__":
 
     ecom.mydll.DbgLineToSFF(SFFLINE, pointer(SFFS[0]))
 
-    if(SETSPEED < 200):
-        SETSPEED = SETSPEED * 161
+    if (SETSPEED < 200):
+        SETSPEED *= 161
 
-    SFFS[0].data[0] = (SETSPEED >> 8) & 0xFF; 
+    SFFS[0].data[0] = (SETSPEED >> 8) & 0xFF;
     SFFS[0].data[1] = SETSPEED & 0xFF;
 
     ecom.mydll.FixChecksum(pointer(SFFS[0]))

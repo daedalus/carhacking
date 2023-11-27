@@ -4,15 +4,15 @@ if __name__ == "__main__":
     arr = []
     i = 0
 
-    f2 = open(filename + ".dat", "w")
-    
+    f2 = open(f"{filename}.dat", "w")
+
     for line in f:
         line = line.strip()
         pieces = line.split(',')
 
         can_data = pieces[3]
 
-        idh = can_data[0:5].replace(' ', '').strip()
+        idh = can_data[:5].replace(' ', '').strip()
         idl = can_data[6:11].replace(' ', '').strip()
         data = can_data[12:].strip()
 

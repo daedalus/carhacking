@@ -36,19 +36,13 @@ class PyEcom:
             return line
 
     def get_pretty_print(self, data):
-        line = ""
-
-        for ch in data:
-            line += "%02X " % (ch)
-
-        return line
+        return "".join("%02X " % (ch) for ch in data)
 
     def get_error(self, data, error_index=0x2):
-        if(data[0] == 0x7F):
-            if(len(data) >= error_index):
-                return data[error_index]
-        else:
+        if data[0] != 0x7F:
             return 0x00
+        if(len(data) >= error_index):
+            return data[error_index]
 
     def send_iso_tp_data_encap(self, wid, data, byte_id):
         sff_msg = pointer(SFFMessage())
@@ -301,16 +295,10 @@ class PyEcom:
         return checksum & 0xFF
 
     def get_diagnostic_payload(self, wid):
-        if wid in PriusDiagData:
-            return PriusDiagData[wid]
-        else:
-            return [0x10, 0x01]
+        return PriusDiagData[wid] if wid in PriusDiagData else [0x10, 0x01]
 
     def get_security_access_payload(self, wid):
-        if wid in PriusSAData:
-            return PriusSAData[wid]
-        else:
-            return [0x27, 0x01]
+        return PriusSAData[wid] if wid in PriusSAData else [0x27, 0x01]
         
     def diagnostic_session(self, wid, data=[0x10, 0x01], byte_id=None):
         ret = None
@@ -346,18 +334,14 @@ class PyEcom:
 
     def toyota_loop_getstatus(self, wid, bad_id, ok_id=None):
         i = 0
-        while(True):
+        while True:
             ret = self.send_iso_tp_data(wid, [0x50], None, RcvAckData)
             self.recv_iso_tp_data(wid)
 
             #unexpected return status should be dealt with
-            if(ret[0] != bad_id):
-                if(ret[0] != 0x00):
-                    if(ok_id != None and ret[0] == ok_id):
-                        return ""
-                    else:
-                        return ret[0]
-            
+            if (ret[0] != bad_id):
+                if (ret[0] != 0x00):
+                    return "" if (ok_id != None and ret[0] == ok_id) else ret[0]
             if(ret[0] == bad_id):
                 time.sleep(1)
             else:

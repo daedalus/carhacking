@@ -8,20 +8,15 @@ from config import *
 import time, struct, sys
 
 def str_to_hexarr(val):
-    payload = []
-    for x in val:
-        payload.append(ord(x))
-
-    return payload
+    return [ord(x) for x in val]
 
 def nbo_int_to_bytearr(dword):
-    arr = []
-    arr.append(dword & 0xFF)
-    arr.append((dword >> 8) & 0xFF)
-    arr.append((dword >> 16) & 0xFF)
-    arr.append((dword >> 24) & 0xFF)
-
-    return arr 
+    return [
+        dword & 0xFF,
+        dword >> 8 & 0xFF,
+        dword >> 16 & 0xFF,
+        dword >> 24 & 0xFF,
+    ] 
 
 class EcuBlock:
     def __init__(self, address, write_address, length):

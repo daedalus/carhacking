@@ -50,7 +50,7 @@ def key_from_seed(seed):
 
 def send_to_e0(mydll, handle, line):
     yy = pointer(SFFMessage())
-    mydll.DbgLineToSFF("IDH: 07, IDL: E0, Len: 08, Data: "+line, yy)
+    mydll.DbgLineToSFF(f"IDH: 07, IDL: E0, Len: 08, Data: {line}", yy)
     mydll.PrintSFF(yy,0)
     mydll.write_message(handle, yy)
     read_by_wid = mydll.read_message_by_wid
@@ -74,10 +74,7 @@ def send_to_e0(mydll, handle, line):
             ret += z.contents.data[1:]
     else:
         ret = z.contents.data[1:]
-    strret = ""
-    for x in ret:
-        strret += "%02X " % x
-    return strret
+    return "".join("%02X " % x for x in ret)
 
 
 #raw_input("make sure car is in bootrom mode, use CarDaqPlusCat")
@@ -85,7 +82,7 @@ send_to_e0(mydll, handle, "02 10 02 00 00 00 00 00")
 seed = send_to_e0(mydll, handle, "02 27 01 00 00 00 00 00")
 #print seed
 key = key_from_seed(seed[6:])
-send_to_e0(mydll, handle, "05 27 02 "+key+" 00 00")
+send_to_e0(mydll, handle, f"05 27 02 {key} 00 00")
 #send_to_e0(mydll, handle, "07 23 14 00 0f 80 00 10")
 send_to_e0(mydll, handle, "07 23 14 00 01 00 C0 10")
 

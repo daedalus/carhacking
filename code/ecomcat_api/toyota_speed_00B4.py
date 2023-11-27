@@ -18,10 +18,10 @@ if __name__ == "__main__":
 
     ecom.mydll.PrintSFF(pointer(SFFS[0]), 0)
 
-    if(SETSPEED < 200):
-        SETSPEED = SETSPEED * 161
+    if (SETSPEED < 200):
+        SETSPEED *= 161
 
-    SFFS[0].data[5] = (SETSPEED >> 8) & 0xFF; 
+    SFFS[0].data[5] = (SETSPEED >> 8) & 0xFF;
     SFFS[0].data[6] = SETSPEED & 0xFF;
 
     ecom.mydll.FixChecksum(pointer(SFFS[0]))

@@ -11,10 +11,7 @@ if(len(sys.argv) < 2):
 file_a = sys.argv[1]
 
 def direction_to_string(direction):
-	if direction == toserver:
-		return ">> "
-	else:
-		return "<< "
+    	return ">> " if direction == toserver else "<< "
 
 def handle_data(payload, payload_len, direction, line_num):
 	can_id = int(payload[0:2],16)
