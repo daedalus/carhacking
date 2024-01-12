@@ -336,9 +336,7 @@ def do_security_access2(mydll, handle, wid):
     if not seed:
         print("no response")
         return
-    strseed = ''
-    for x in seed:
-        strseed += "%02X " % x
+    strseed = ''.join("%02X " % x for x in seed)
 #    print seed
     key = key_from_seed(wid, strseed[6:], 2)
     send_data(mydll, handle, wid, [0x27,4]+key)
@@ -468,23 +466,19 @@ def do_inputoutput_14230(mydll, handle, wid, inputoutputID, options):
 
 
 def search_for_readable_memory(mydll, handle, wid):
-    x = 0x0
-    while x < 0xffff00:
+    for x in range(0x0, 0xffff00, 256):
         print("Reading from %x" % x, end=' ')
         print(do_read_memory(mydll, handle, wid, x, 0x10))
-        x += 0x100
 
 
 def search_for_pullable_memory(mydll, handle, wid):
-    x = 0x0
-    while x < 0xffff00:
+    for x in range(0x0, 0xffff00, 256):
         print("Reading from %x" % x)
         ret = pull_data(mydll, handle, wid, x, 0x10)
         if len(ret)>0:
             print("Yes from %x" % x)
         else:
             print("No from %x" % x)
-        x += 0x100
         # RequestTransferExit
         send_data(mydll, handle, wid, [0x37])
 

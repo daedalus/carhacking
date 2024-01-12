@@ -4,9 +4,11 @@ from SFF import SFFMessage
 clean, longdata = list(range(2))
 toserver, toclient = list(range(2))
 
-if(len(sys.argv) < 2):
-    	print("Usage: %s <file1> " % (sys.argv[0]))
+if (len(sys.argv) < 2):
+    	print(f"Usage: {sys.argv[0]} <file1> ")
 	sys.exit(1)
+
+sys.exit(1)
 
 file_a = sys.argv[1]
 
@@ -58,12 +60,12 @@ def get_id_string(id):
     	        "UNKNOWN_%02x" % id)
 
 def handle_data(payload, len, direction, line_num):
-	id = int(payload[0:2],16)
-	id_s = get_id_string(id)
-	
-	payload = payload[2:]
-	#print "%sLen %02X, id %02X, payload %s" % (direction_to_string(direction), len, id, payload)
-	print(id_s + "  Line:%d" % (line_num))
+    	id = int(payload[:2], 16)
+    	id_s = get_id_string(id)
+
+    	payload = payload[2:]
+    	#print "%sLen %02X, id %02X, payload %s" % (direction_to_string(direction), len, id, payload)
+    	print(id_s + "  Line:%d" % (line_num))
 #	if id == 0x34:
 #		print "NEW DOWNLOAD " + payload
 #	if id == 0x36:

@@ -15,24 +15,22 @@ for o,a in optlist:
         outputfile = a
 
 inputfile = args[0]
-fp = open(inputfile, "r")
-unique_msgs = []
-total = 0
+with open(inputfile, "r") as fp:
+    unique_msgs = []
+    total = 0
 
-for line in fp:
-    msg = SFFMessage(line)
-    total = total + 1
-    if not msg in unique_msgs:
-        unique_msgs.append(msg)
-fp.close()
-
+    for line in fp:
+        msg = SFFMessage(line)
+        total = total + 1
+        if msg not in unique_msgs:
+            unique_msgs.append(msg)
 print("File had %d lines and %d were unique" % (total, len(unique_msgs)))
 
 if(outputfile != ""):
     fp = open(outputfile, "w")
-    
+
 for msg in unique_msgs:
-    print(str(msg))
+    print(msg)
 
     if(outputfile != ""):
         fp.write(str(msg) + '\n')

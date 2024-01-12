@@ -3,11 +3,11 @@ from SFF import SFFMessage
 
 if __name__ == "__main__":
 
-    if(len(sys.argv) < 3):
-        print("Usage: %s <inputfile> <outputfile> <11-bit CAN ID>" % (sys.argv[0]))
-        print("Example1: %s input.dat output.dat 0025" % (sys.argv[0]))
-        print("Example2: %s input.dat output.dat 0025,0026,0027" % (sys.argv[0]))
-        print("Example3: %s input.dat output.dat 0025-02FF" % (sys.argv[0]))
+    if (len(sys.argv) < 3):
+        print(f"Usage: {sys.argv[0]} <inputfile> <outputfile> <11-bit CAN ID>")
+        print(f"Example1: {sys.argv[0]} input.dat output.dat 0025")
+        print(f"Example2: {sys.argv[0]} input.dat output.dat 0025,0026,0027")
+        print(f"Example3: {sys.argv[0]} input.dat output.dat 0025-02FF")
         sys.exit(1)
 
     #search types
@@ -22,10 +22,9 @@ if __name__ == "__main__":
     output_file = sys.argv[2]
     find_wid = sys.argv[3]
 
-    if(find_wid.find(',') != -1):
+    if (find_wid.find(',') != -1):
         ids = find_wid.split(",")
-        for wid in ids:
-            wids.append(wid.strip())
+        wids.extend(wid.strip() for wid in ids)
         wid_search = 2
     elif(find_wid.find("-") != -1):
         ids = find_wid.split("-")
@@ -35,23 +34,23 @@ if __name__ == "__main__":
 
     #input file to read debug lines from
     f = file(input_file, "r")
-        
+
     msgs = []
     count = 0
     for line in f:
         msg = SFFMessage(line)
-        if(msg.wid != 0):
-            if(wid_search == 1):
-                if(msg.wid != find_wid):
-                    count += 1
-                    #msgs.append(msg)
-                    msgs.append(line.strip())
-            elif(wid_search == 2):
-                if(msg.wid not in wids):
-                    count += 1
-                    #msgs.append(msg)
-                    msgs.append(line.strip())
-            elif(wid_search == 3):
+        if (msg.wid != 0):
+            if (
+                wid_search == 1
+                and (msg.wid != find_wid)
+                or wid_search != 1
+                and wid_search == 2
+                and (msg.wid not in wids)
+            ):
+                count += 1
+                #msgs.append(msg)
+                msgs.append(line.strip())
+            elif wid_search != 1 and wid_search != 2 and wid_search == 3:
                 wid = int(msg.wid, 16)
                 if(wid <= low and wid >= high):
                     count += 1
@@ -61,10 +60,10 @@ if __name__ == "__main__":
 
     #output file to write certain lines out
     f = file(output_file, "w")
-        
+
     for found in msgs:
         f.write(str(found) + '\n')
-        
+
     f.close()
 
     print("Found %d messages that do not match %s" % (count, sys.argv[3]))

@@ -11,18 +11,16 @@ if __name__ == "__main__":
     for ecu_num, ecu_str in PriusECU.items():
         
         print("DaigCheck...[0x%04X] => %s..." % (ecu_num, ecu_str))
-        ret = ecom.diagnostic_session(ecu_num, diag_req)
-        if(not ret):
-            print("FAILED\n")
-        else:
+        if ret := ecom.diagnostic_session(ecu_num, diag_req):
             print("SUCCEEDED!\n")
 
+        else:
+            print("FAILED\n")
     for ecu_sub_num, ecu_str in PriusMainECU.items():
         print("DiagCheck...[0x0750:0x%02X] => %s..." % (ecu_sub_num, ecu_str))
-        ret = ecom.diagnostic_session(0x750, diag_req, ecu_sub_num)
-        if(not ret):
-            print("FAILED\n")
-        else:
+        if ret := ecom.diagnostic_session(0x750, diag_req, ecu_sub_num):
             print("SUCCEEDED!\n")
+        else:
+            print("FAILED\n")
     
     

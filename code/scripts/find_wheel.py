@@ -20,7 +20,7 @@ class SFFMessage:
 				print("ERROR - COULDN'T SPLIT DATA")
 
 
-def	check_for_msg(msg, print_repeats, verbosity):
+def check_for_msg(msg, print_repeats, verbosity):
 	global lines
 	if msg.wid in list(lines.keys()):
 #		print "existing..."
@@ -43,7 +43,7 @@ def	check_for_msg(msg, print_repeats, verbosity):
 				if not print_repeats:
 					add_msg_to_data(msg)
 	else:
-		print("NEW MSG TYPE " + msg.wid)
+		print(f"NEW MSG TYPE {msg.wid}")
 
 
 def add_msg_to_data(msg):
@@ -109,7 +109,7 @@ def do_max(file, wid, byte):
 	global lines
 	print(file)
 	lines = {}
-	get_data(file+".dat")
+	get_data(f"{file}.dat")
 	print_max(wid, byte)
 
 #do_max('off','0250',1)

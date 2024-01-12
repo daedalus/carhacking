@@ -17,25 +17,22 @@ for o,a in optlist:
 inputfile = args[0]
 search_byte = args[1]
 found_lines = []
-fp = open(inputfile, "r")
+with open(inputfile, "r") as fp:
+    #look for the 2nd byte of the data for a particular byte
+    for line in fp:
+        msg = SFFMessage(line)
 
-#look for the 2nd byte of the data for a particular byte
-for line in fp:
-    msg = SFFMessage(line)
+            #skip over multi-line transactions as we don't care
+        if msg.data[:1] == "2":
+            continue
 
-    #skip over multi-line transactions as we don't care
-    if msg.data[0:1] == "2":
-        continue
-
-    if msg.data[3:5] == search_byte:
-        found_lines.append(msg)    
-fp.close()
-
+        if msg.data[3:5] == search_byte:
+            found_lines.append(msg)
 if(outputfile != ""):
     fp = open(outputfile, "w")
-    
+
 for msg in found_lines:
-    print(str(msg))
+    print(msg)
 
     if(outputfile != ""):
         fp.write(str(msg) + '\n')

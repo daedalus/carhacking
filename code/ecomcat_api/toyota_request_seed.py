@@ -27,4 +27,4 @@ if __name__ == "__main__":
         key_resp = ecom.send_iso_tp_data(ECU, key_data, None)
         err = ecom.get_error(key_resp)
         if err != 0x00:
-            print("Error: %s" % (NegRespErrStr(err)))
+            print(f"Error: {NegRespErrStr(err)}")
