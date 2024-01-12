@@ -9,7 +9,7 @@ fileb_ids = []
 fileb_ids_diff = []
 
 if(len(sys.argv) < 2):
-    	print "Usage: %s <file1> " % (sys.argv[0])
+    	print("Usage: %s <file1> " % (sys.argv[0]))
 	sys.exit(1)
 
 file_a = sys.argv[1]
@@ -27,7 +27,7 @@ for line in fpfilea:
 		wheel = wheel1 + wheel2
 		x = "%d" % wheel
 		try:
-			print x + stats[80] + stats[82] + stats[215]
+			print(x + stats[80] + stats[82] + stats[215])
 		except:
 			pass
         if int(sff_msg.idh,16) == 0 and int(sff_msg.idl,16) == 0x80:

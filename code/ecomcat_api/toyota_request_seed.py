@@ -11,11 +11,11 @@ if __name__ == "__main__":
     ECU = 0x7E0
 
     for i in range(0, 11):
-        print "Attempt %d" % (i)
+        print("Attempt %d" % (i))
         resp = ecom.send_iso_tp_data(ECU, ecom.get_security_access_payload(ECU), None)
 
         if not resp or len(resp) == 0:
-            print "No Response"
+            print("No Response")
 
         seed = resp[2] << 24 | resp[3] << 16 | resp[4] << 8 | resp[5]
 
@@ -27,4 +27,4 @@ if __name__ == "__main__":
         key_resp = ecom.send_iso_tp_data(ECU, key_data, None)
         err = ecom.get_error(key_resp)
         if err != 0x00:
-            print "Error: %s" % (NegRespErrStr(err))
+            print("Error: %s" % (NegRespErrStr(err)))

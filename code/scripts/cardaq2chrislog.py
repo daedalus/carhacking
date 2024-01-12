@@ -27,8 +27,8 @@ if __name__ == "__main__":
             #print "IDH: %02X, IDL: %02X, Len: %02X, Data: %s" % (idh, idl, data_len, data)
             f2.write("IDH: %02X, IDL: %02X, Len: %02X, Data: %s\n" % (idh, idl, data_len, data))
         else:
-            print "29-bit not supported!"
+            print("29-bit not supported!")
 
     f2.close()
 
-    print "END"
+    print("END")

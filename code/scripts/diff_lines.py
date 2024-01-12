@@ -5,7 +5,7 @@ output = ""
 
 optlist, args = getopt.getopt(sys.argv[1:], ':o:')
 if(len(args) < 2):
-    print "Usage: %s [options] <filea> <fileb>" % (sys.argv[0])
+    print("Usage: %s [options] <filea> <fileb>" % (sys.argv[0]))
     sys.exit(1)
 
 for o, a in optlist:
@@ -47,28 +47,28 @@ if(output != ""):
     of = open(output, "w")
     
 filea_cnt = "Only %s [%d lines]" % (file_a, len(filea_msgs_diff))
-print filea_cnt
+print(filea_cnt)
 
 if(of):
     of.write(filea_cnt + '\n')
 
 for msg in filea_msgs_diff:
-    print str(msg)
+    print(str(msg))
     if(of):
         of.write(str(msg) + '\n')
 
-print "\n"
+print("\n")
 if(of):
     of.write('\n')
 
 fileb_cnt = "Only %s [%d lines]" % (file_b, len(fileb_msgs_diff))
-print fileb_cnt
+print(fileb_cnt)
 
 if(of):
     of.write(fileb_cnt + '\n')
     
 for msg in fileb_msgs_diff:
-    print str(msg)
+    print(str(msg))
     if(of):
         of.write(str(msg) + '\n')
 

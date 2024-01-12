@@ -9,14 +9,14 @@ wid = 0x736
 filename = 'try_send_can.bin'
 
 if do_diagnostic_session(mydll, handle, wid, "prog"):
-	print "Started diagnostic session"
+	print("Started diagnostic session")
 	time.sleep(1)
 do_security_access(mydll, handle, wid)
 
 try:
    with open(filename): pass
 except IOError:
-   print 'Need firmware file to upload'
+   print('Need firmware file to upload')
    sys.exit(0)
 
 if do_download_compliant(mydll, handle, wid, 0x0, filename):

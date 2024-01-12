@@ -5,9 +5,9 @@ verbose = True
 outputfile = ""
 optlist, args = getopt.getopt(sys.argv[1:], ':o:')
 if(len(args) < 1):
-    print "Usage: %s [options] <inputfile>"
-    print "options:"
-    print " -o <output file>"
+    print("Usage: %s [options] <inputfile>")
+    print("options:")
+    print(" -o <output file>")
     sys.exit(1)
 
 for o,a in optlist:
@@ -26,13 +26,13 @@ for line in fp:
         unique_wids.append(msg.wid)
 fp.close()
 
-print "File had %d lines and %d were unique" % (total, len(unique_wids))
+print("File had %d lines and %d were unique" % (total, len(unique_wids)))
 
 if(outputfile != ""):
     fp = open(outputfile, "w")
     
 for msg in unique_wids:
-    print str(msg)
+    print(str(msg))
 
     if(outputfile != ""):
         fp.write(str(msg) + '\n')

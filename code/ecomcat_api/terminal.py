@@ -13,10 +13,10 @@ while(1):
     for x in line.split(' '):
         payload.append(int(x, 16))
 
-    print "N) Normal A) AckData D) AckDataAck"
+    print("N) Normal A) AckData D) AckDataAck")
     sys.stdout.write("Enter Msg Type: ")
     msg_type = sys.stdin.readline()
     msg_type = msg_type.upper().strip()
 
-    print payload
-    print msg_type
+    print(payload)
+    print(msg_type)

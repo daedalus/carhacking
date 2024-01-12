@@ -73,8 +73,8 @@ with open(filename, "rb") as f:
     fixed_fp.write(struct.pack('>l', header_crc32_fixed))
     fixed_fp.write(header)
 
-    print "Header CRC: %08X" % (header_crc32)
-    print "Header Computed CRC: %08X" % (header_crc32_fixed & 0xFFFFFFFF)
+    print("Header CRC: %08X" % (header_crc32))
+    print("Header Computed CRC: %08X" % (header_crc32_fixed & 0xFFFFFFFF))
 
     #should match the 'Number' in the CUW header
     number_of_cpus = f.read(0x01)
@@ -106,8 +106,8 @@ with open(filename, "rb") as f:
 
     fixed_fp.write(new_s_format_data)
 
-    print "Header CRC: %08X" % (s_format_crc32)
-    print "Header Computed CRC: %08X" % (s_format_crc32_fixed)
+    print("Header CRC: %08X" % (s_format_crc32))
+    print("Header Computed CRC: %08X" % (s_format_crc32_fixed))
 
 
 fixed_fp.seek(0x12)

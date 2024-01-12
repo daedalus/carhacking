@@ -8,7 +8,7 @@ handle = mydll.open_device(3,0)
 wid = 0x726
 
 if do_diagnostic_session(mydll, handle, wid, "prog"):
-	print "Started diagnostic session"
+	print("Started diagnostic session")
 	time.sleep(1)
 do_security_access(mydll, handle, wid)
 

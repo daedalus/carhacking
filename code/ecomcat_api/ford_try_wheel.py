@@ -13,7 +13,7 @@ read_by_wid = mydll.read_message_by_wid_with_timeout
 read_by_wid.restype = POINTER(SFFMessage)
 z = mydll.read_message_by_wid_with_timeout(handle, 0x80, 1000)
 current = (z.contents.data[0]<<8) + z.contents.data[1]
-print "Current wheel at %x" % current
+print("Current wheel at %x" % current)
 change = 0
 y = pointer(SFFMessage())
 

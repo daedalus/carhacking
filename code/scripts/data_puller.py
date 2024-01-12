@@ -4,10 +4,10 @@ from SFF import SFFMessage
 if __name__ == "__main__":
 
     if(len(sys.argv) < 3):
-        print "Usage: %s <inputfile> <outputfile> <11-bit CAN ID>" % (sys.argv[0])
-        print "Example1: %s input.dat output.dat 0025" % (sys.argv[0])
-        print "Example2: %s input.dat output.dat 0025,0026,0027" % (sys.argv[0])
-        print "Example3: %s input.dat output.dat 0025-02FF" % (sys.argv[0])
+        print("Usage: %s <inputfile> <outputfile> <11-bit CAN ID>" % (sys.argv[0]))
+        print("Example1: %s input.dat output.dat 0025" % (sys.argv[0]))
+        print("Example2: %s input.dat output.dat 0025,0026,0027" % (sys.argv[0]))
+        print("Example3: %s input.dat output.dat 0025-02FF" % (sys.argv[0]))
         sys.exit(1)
 
     #search types
@@ -67,5 +67,5 @@ if __name__ == "__main__":
         
     f.close()
 
-    print "Found %d messages that match %s" % (count, sys.argv[3])
+    print("Found %d messages that match %s" % (count, sys.argv[3]))
     

@@ -5,9 +5,9 @@ verbose = True
 outputfile = ""
 optlist, args = getopt.getopt(sys.argv[1:], ':o:')
 if(len(args) < 1):
-    print "Usage: %s [options] <inputfile> <id>"
-    print "options:"
-    print " -o <output file>"
+    print("Usage: %s [options] <inputfile> <id>")
+    print("options:")
+    print(" -o <output file>")
     sys.exit(1)
 
 for o,a in optlist:
@@ -35,7 +35,7 @@ if(outputfile != ""):
     fp = open(outputfile, "w")
     
 for msg in found_lines:
-    print str(msg)
+    print(str(msg))
 
     if(outputfile != ""):
         fp.write(str(msg) + '\n')

@@ -5,7 +5,7 @@ s_type = s_line[0:2]
 s_len = int(s_line[2:4], 16)
 
 data_checksum += s_len
-print "SLen: %02X" % (s_len)
+print("SLen: %02X" % (s_len))
 
 curr_index = 4
 
@@ -26,7 +26,7 @@ end_index = curr_index + data_end
 
 data = s_line[curr_index:-2]
 
-print data
+print(data)
 
 #create a checksum
 for i in range(0, len(data), 2):
@@ -34,4 +34,4 @@ for i in range(0, len(data), 2):
 
     data_checksum += int(byte, 16)
 
-print "ChecksumByte: 0x%02X" % (~data_checksum & 0xFF)
+print("ChecksumByte: 0x%02X" % (~data_checksum & 0xFF))

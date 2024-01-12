@@ -22,12 +22,12 @@ if __name__ == "__main__":
     optlist, args = getopt.gnu_getopt(sys.argv[1:], ':o:ce')
 
     if(len(args) < 1):
-        print "Usage: %s [options] <inputfile> [flags]" % (sys.argv[0])
-        print "Options:"
-        print " -o <outputfile>"
-        print "Flags:"
-        print " -c Create ID files from histogram"
-        print " -e Run ID files created with '-c' through ECom cable"
+        print("Usage: %s [options] <inputfile> [flags]" % (sys.argv[0]))
+        print("Options:")
+        print(" -o <outputfile>")
+        print("Flags:")
+        print(" -c Create ID files from histogram")
+        print(" -e Run ID files created with '-c' through ECom cable")
         sys.exit(1)
 
     #print optlist
@@ -63,7 +63,7 @@ if __name__ == "__main__":
         if(output_file):
             out_f.write("%s %s\n" % (sff_code, histo[sff_code]))
         
-        print sff_code, histo[sff_code]
+        print(sff_code, histo[sff_code])
         sff_codes.append(sff_code)
 
     if(out_f):
@@ -76,7 +76,7 @@ if __name__ == "__main__":
             call(["python", "data_puller.py", input_file, output_file, sff_code])
 
             if(try_ecomcat):
-                print "Running => ECOMCat %s" % (output_file)
+                print("Running => ECOMCat %s" % (output_file))
                 call(["ECOMCat.exe", output_file])
                 #print "Please hit enter to continue"
                 #ch = sys.stdin.readline()

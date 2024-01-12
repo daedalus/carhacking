@@ -19,7 +19,7 @@ if __name__ == "__main__":
     for i in range(0, num_of_sffs):
         ecom.mydll.DbgLineToSFF(sff_lines[i], pointer(sffs[i]))
 
-    print "Starting to send wheel msgs"
+    print("Starting to send wheel msgs")
     while(1):
         for i in range(0, num_of_sffs):
             ecom.mydll.write_message(ecom.handle, pointer(sffs[i]))

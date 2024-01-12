@@ -23,7 +23,7 @@ if __name__ == "__main__":
 
     ret = ecom.security_access(ECU)
     if ret:
-        print "[*] [0x%04X] Security Access: Success" % (ECU)
+        print("[*] [0x%04X] Security Access: Success" % (ECU))
 
         #Unsure but this happens 3x in the capture before diag programming mode
         #I think this may have to do w/ tellin other ECUs the one being reprogrammed
@@ -33,7 +33,7 @@ if __name__ == "__main__":
                                         
         ret = ecom.diagnostic_session(ECU, [0x10, 0x02])
         if ret:
-            print "[*] [0x%04X] Programming Mode: Success" % (ECU)
+            print("[*] [0x%04X] Programming Mode: Success" % (ECU))
 
             ecom.send_iso_tp_data(0x01, [0x00])
             ecom.send_iso_tp_data(0x01, [0x00])
@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
                 ecu_version = ecom.send_iso_tp_data(0x01, [p1, p2, p3, p4])
                 if ecu_version:
-                    print "FOUND MAGIC: %02X %02X %02X %02X" % (p1,p2,p3,p4)
+                    print("FOUND MAGIC: %02X %02X %02X %02X" % (p1,p2,p3,p4))
                     break
 
             close(f)

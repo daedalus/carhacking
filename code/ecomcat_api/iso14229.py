@@ -70,7 +70,7 @@ NegRespCode = {
 }
 
 def NegRespErrStr(err_code):
-    if err_code in NegRespCode.keys():
+    if err_code in list(NegRespCode.keys()):
         return NegRespCode[err_code][1]
     else:
         return "Unknown Error %02X" % (err_code)

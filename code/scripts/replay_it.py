@@ -11,7 +11,7 @@ def playit(x):
                 fp.write(line + "\n")
         fp.close()
 
-        print "Running => ECOMCat %s" % (filename)
+        print("Running => ECOMCat %s" % (filename))
         call(["ECOMCat.exe", filename])
         #print "Please hit enter to continue"
         #ch = sys.stdin.readline()
@@ -20,8 +20,8 @@ def find_first(x,cur,level):
         temp = x[cur:]
         playit(temp)
         offset = len(x)/level
-        print "in findit with cur = %d, level=%d, offset=%d" % (cur, level,offset)
-        yesno = raw_input("Did it still do the thing?")
+        print("in findit with cur = %d, level=%d, offset=%d" % (cur, level,offset))
+        yesno = input("Did it still do the thing?")
         if yesno[0] == 'y':
                 # didn't need those bytes
                 cur += offset
@@ -33,16 +33,16 @@ def find_first(x,cur,level):
         if offset > 0:
                 return find_first(x,cur,2*level)
         else:
-                print "FOUND BEGINING"
-                print x[cur]
+                print("FOUND BEGINING")
+                print(x[cur])
                 return cur
 
 def find_end(x,cur,level):
         temp = x[:cur]
         playit(temp)
         offset = len(x)/level
-        print "in findit with cur = %d, level=%d, offset=%d" % (cur, level,offset)
-        yesno = raw_input("Did it still do the thing?")
+        print("in findit with cur = %d, level=%d, offset=%d" % (cur, level,offset))
+        yesno = input("Did it still do the thing?")
         if yesno[0] == 'y':
                 # didn't need those bytes
                 if offset == 0:
@@ -54,8 +54,8 @@ def find_end(x,cur,level):
         if offset > 0:
                 return find_end(x,cur,2*level)
         else:
-                print "FOUND END"
-                print x[cur]
+                print("FOUND END")
+                print(x[cur])
                 return cur
 
 
@@ -72,7 +72,7 @@ def findit(x):
                 y += 1
         first = find_first(x, len(x)/2, 4)
         last = find_end(x, len(x)/2, 4)
-        print "FOUND MINIMAL SET"
+        print("FOUND MINIMAL SET")
 
         min_fp = open("minset.dat", "w")
         for l in x[first:last+1]:
@@ -86,7 +86,7 @@ if __name__ == "__main__":
         #get array 'lines' which is everyline from a debug output
         lines = []
         fp = open('input_good.dat', 'r')
-        print "starting.."
+        print("starting..")
         for line in fp:
                 lines.append(line.strip())
         fp.close()

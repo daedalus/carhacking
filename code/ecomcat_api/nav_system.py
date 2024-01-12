@@ -13,7 +13,7 @@ mydll.PrintSFF(z,0)
 wheel = z.contents.data[0] << 8
 wheel += z.contents.data[1]
 
-print "%x" % wheel
+print("%x" % wheel)
 yy = pointer(SFFMessage())
 
 while True:

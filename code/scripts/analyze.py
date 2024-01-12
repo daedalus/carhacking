@@ -17,47 +17,47 @@ class SFFMessage:
 
 			self.data_pieces = self.data.split(' ')
 			if len(self.data_pieces) != self.len:
-				print "ERROR - COULDN'T SPLIT DATA"
-				print line
-				print self.data
+				print("ERROR - COULDN'T SPLIT DATA")
+				print(line)
+				print(self.data)
 
 
 def	check_for_msg(msg, print_repeats, verbosity):
 	global lines
-	if msg.wid in lines.keys():
+	if msg.wid in list(lines.keys()):
 #		print "existing..."
 		entry = lines[msg.wid]
 		if entry['len'] != msg.len:
-			print "Packet with unexpected length found!"
-			print msg.line
+			print("Packet with unexpected length found!")
+			print(msg.line)
 			if not print_repeats:
 				add_msg_to_data(msg)
 		for x in range(msg.len):
 			#seen this byte before
-			if msg.data_pieces[x] not in entry[x].keys():
+			if msg.data_pieces[x] not in list(entry[x].keys()):
 				if verbosity > 0:
-					print "FOUND DIFFERING BYTE, SLOT %d" % x
-					print entry[x].keys()
-					print msg.data_pieces[x]
-					print msg.line
+					print("FOUND DIFFERING BYTE, SLOT %d" % x)
+					print(list(entry[x].keys()))
+					print(msg.data_pieces[x])
+					print(msg.line)
 				if verbosity == 0:
-					print msg.wid
+					print(msg.wid)
 				if not print_repeats:
 					add_msg_to_data(msg)
 	else:
-		print "NEW MSG TYPE " + msg.wid
+		print("NEW MSG TYPE " + msg.wid)
 
 
 def add_msg_to_data(msg):
 	global lines
-	if msg.wid in lines.keys():
+	if msg.wid in list(lines.keys()):
 #		print "existing, add to it"
 		entry = lines[msg.wid]
 		if entry['len'] != msg.len:
-			print "Packet with lengths that don't match found!"
+			print("Packet with lengths that don't match found!")
 		for x in range(msg.len):
 			#seen this byte before
-			if msg.data_pieces[x] in entry[x].keys():
+			if msg.data_pieces[x] in list(entry[x].keys()):
 				entry[x][msg.data_pieces[x]] = entry[x][msg.data_pieces[x]] + 1
 			# its a new byte
 			else:

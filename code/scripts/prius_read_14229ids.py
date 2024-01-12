@@ -1,11 +1,11 @@
 #!/usr/bin/python
 import sys
 from SFF import SFFMessage
-clean, longdata = range(2)
-toserver, toclient = range(2)
+clean, longdata = list(range(2))
+toserver, toclient = list(range(2))
 
 if(len(sys.argv) < 2):
-    	print "Usage: %s <file1> " % (sys.argv[0])
+    	print("Usage: %s <file1> " % (sys.argv[0]))
 	sys.exit(1)
 
 file_a = sys.argv[1]
@@ -19,7 +19,7 @@ def handle_data(payload, payload_len, direction, line_num):
 	
 	payload = payload[2:]
 	#print "%sLen %02X, id %02X, payload %s" % (direction_to_string(direction), len, id, payload)
-	print id_s + "  Line:%d" % (line_num)
+	print(id_s + "  Line:%d" % (line_num))
 
 fpfilea = open(file_a)
 

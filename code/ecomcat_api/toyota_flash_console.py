@@ -56,10 +56,10 @@ if __name__ == "__main__":
         #do security access
         ret = ecom.security_access(ECU)
         if ret == False:
-            print "[!] [0x%04X] Security Access: FAILURE" % (ECU)
+            print("[!] [0x%04X] Security Access: FAILURE" % (ECU))
             sys.exit(1)
             
-        print "[*] [0x%04X] Security Access: Success" % (ECU)
+        print("[*] [0x%04X] Security Access: Success" % (ECU))
 
         #Unsure but this happens 3x in the capture before diag programming mode
         #I think this may have to do w/ tellin other ECUs the one being reprogrammed
@@ -71,10 +71,10 @@ if __name__ == "__main__":
         #Failure to be in the required mode will result in diagnostic session failing
         ret = ecom.diagnostic_session(ECU, [0x10, 0x02])
         if ret == False:
-            print "[!] [0x%04X] Programming Mode: Failure" % (ECU)
+            print("[!] [0x%04X] Programming Mode: Failure" % (ECU))
             sys.exit(1)
 
-        print "[*] [0x%04X] Programming Mode: Success" % (ECU)
+        print("[*] [0x%04X] Programming Mode: Success" % (ECU))
 
         #These turn the 'check engine' light off. maybe puts ecu in offline mode?
         ecom.send_iso_tp_data(CID, [0x00])
@@ -90,10 +90,10 @@ if __name__ == "__main__":
         #save the version as a string but also keep it as an array in case we need it
         ecu_version  = ''.join(chr(val) for val in ecu_version_arr)
         if(not ecu_version):
-            print "[!] TargetData failed"
+            print("[!] TargetData failed")
             sys.exit(1)
 
-        print "[*] Current Version: %s" % (ecu_version)
+        print("[*] Current Version: %s" % (ecu_version))
 
         #ack that we got the data
         ecom.send_iso_tp_data(CID, [0x3C])
@@ -105,16 +105,16 @@ if __name__ == "__main__":
         #recv last response
         ret = ecom.recv_iso_tp_data(CID)
 
-        print "[*] Acuired MemoryInfo %s" % (mem_info)     
+        print("[*] Acuired MemoryInfo %s" % (mem_info))     
 
     #start interactive CAN Flashing session
     while(1):
-        print "1) Send Msg | Get Ack"
-        print "2) Send Msg | Get AckData" 
-        print "3) Send Repeated Character"
-        print "4) Send Data from file"
-        print "5) GetStatus"
-        print "q) Quit"
+        print("1) Send Msg | Get Ack")
+        print("2) Send Msg | Get AckData") 
+        print("3) Send Repeated Character")
+        print("4) Send Data from file")
+        print("5) GetStatus")
+        print("q) Quit")
         
         sys.stdout.write("Enter Choice: ")
         choice = sys.stdin.readline().strip()
@@ -149,7 +149,7 @@ if __name__ == "__main__":
             val = ord(data[0].strip())
 
             length = int(data[1].strip(), 16)
-            print "Len: %04X" % (length)
+            print("Len: %04X" % (length))
 
             payload = []
             for i in range(0, length):
@@ -167,7 +167,7 @@ if __name__ == "__main__":
                 f = open(fn, "rb")
             except:
                 if not f:
-                    print "Bad filename: %s" % (fn)
+                    print("Bad filename: %s" % (fn))
                     continue
 
             offset = data[1].strip()
@@ -188,7 +188,7 @@ if __name__ == "__main__":
             ret = ecom.send_iso_tp_data(0x01, payload)
         elif choice == "5":
             ret = ecom.toyota_getstatus(0x01)
-            print ret
+            print(ret)
         elif choice == "q" or choice == "Q":
             break
         else:

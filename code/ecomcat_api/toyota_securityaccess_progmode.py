@@ -12,10 +12,10 @@ if __name__ == "__main__":
     #do security access
     ret = ecom.security_access(ECU)
     if ret == False:
-        print "[!] [0x%04X] Security Access: FAILURE" % (ECU)
+        print("[!] [0x%04X] Security Access: FAILURE" % (ECU))
         sys.exit(1)
         
-    print "[*] [0x%04X] Security Access: Success" % (ECU)
+    print("[*] [0x%04X] Security Access: Success" % (ECU))
 
     #Unsure but this happens 3x in the capture before diag programming mode
     #I think this may have to do w/ tellin other ECUs the one being reprogrammed
@@ -27,10 +27,10 @@ if __name__ == "__main__":
     #Failure to be in the required mode will result in diagnostic session failing
     ret = ecom.diagnostic_session(ECU, [0x10, 0x02])
     if ret == False:
-        print "[!] [0x%04X] Programming Mode: Failure" % (ECU)
+        print("[!] [0x%04X] Programming Mode: Failure" % (ECU))
         sys.exit(1)
 
-    print "[*] [0x%04X] Programming Mode: Success" % (ECU)
+    print("[*] [0x%04X] Programming Mode: Success" % (ECU))
 
 
 ##    for ecu_num, ecu_name in PriusECU.iteritems():

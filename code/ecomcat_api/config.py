@@ -1,7 +1,7 @@
 #2010 Toyota Prius ECU Information
 
 #Flashing information
-(RcvAckData, RcvAckDataAck) = range(0,2)
+(RcvAckData, RcvAckDataAck) = list(range(0,2))
 
 #Prius encryption keys (These should stay in the same order due to the algo)
 PriusSecrets = [0xA441, 0x2172, 0xA421, 0x4172]

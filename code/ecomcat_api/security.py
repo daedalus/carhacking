@@ -12,7 +12,7 @@
 seed = "7A 6B 61"
 real_key = "96 11 73"
 
-print "Observed seed: "+seed
+print("Observed seed: "+seed)
 #
 # This is the "secret" found in debugger for PCM
 #
@@ -54,5 +54,5 @@ for j in range(0,32):
 
 key = ((mucked_value & 0xF0000) >> 16) | 16 * (mucked_value & 0xF) | ((((mucked_value & 0xF00000) >> 20) | ((mucked_value & 0xF000) >> 8)) << 8) | ((mucked_value & 0xFF0) >> 4 << 16);
 
-print "Computed key: %x" % key
-print "observed key: " + real_key
+print("Computed key: %x" % key)
+print("observed key: " + real_key)

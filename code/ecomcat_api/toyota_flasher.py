@@ -81,10 +81,10 @@ if __name__ == "__main__":
         #do security access
         ret = ecom.security_access(ECU)
         if ret == False:
-            print "[!] [0x%04X] Security Access: FAILURE" % (ECU)
+            print("[!] [0x%04X] Security Access: FAILURE" % (ECU))
             sys.exit(1)
             
-        print "[*] [0x%04X] Security Access: Success" % (ECU)
+        print("[*] [0x%04X] Security Access: Success" % (ECU))
 
         #Unsure but this happens 3x in the capture before diag programming mode
         #I think this may have to do w/ tellin other ECUs the one being reprogrammed
@@ -96,10 +96,10 @@ if __name__ == "__main__":
         #Failure to be in the required mode will result in diagnostic session failing
         ret = ecom.diagnostic_session(ECU, [0x10, 0x02])
         if ret == False:
-            print "[!] [0x%04X] Programming Mode: Failure" % (ECU)
+            print("[!] [0x%04X] Programming Mode: Failure" % (ECU))
             sys.exit(1)
 
-        print "[*] [0x%04X] Programming Mode: Success" % (ECU)
+        print("[*] [0x%04X] Programming Mode: Success" % (ECU))
 
         #These turn the 'check engine' light off. maybe puts ecu in offline mode?
         ecom.send_iso_tp_data(CID, [0x00])
@@ -115,10 +115,10 @@ if __name__ == "__main__":
         #save the version as a string but also keep it as an array in case we need it
         ecu_version  = ''.join(chr(val) for val in ecu_version_arr)
         if(not ecu_version):
-            print "[!] TargetData failed"
+            print("[!] TargetData failed")
             sys.exit(1)
 
-        print "[*] Current Version: %s" % (ecu_version)
+        print("[*] Current Version: %s" % (ecu_version))
 
         #ack that we got the data
         ecom.send_iso_tp_data(CID, [0x3C])
@@ -130,7 +130,7 @@ if __name__ == "__main__":
         #recv last response
         ret = ecom.recv_iso_tp_data(CID)
 
-        print "[*] Acuired MemoryInfo %s" % (mem_info) 
+        print("[*] Acuired MemoryInfo %s" % (mem_info)) 
     #END PREAMBLE
 
 
@@ -153,21 +153,21 @@ if __name__ == "__main__":
         #read one chunk from the file
         chunk = f.read(0x400)
         if(not chunk):
-            print "[!] Chunk could not be read"
+            print("[!] Chunk could not be read")
             sys.exit(1)
 
         #CheckBlock
         ecom.send_iso_tp_data(CID, [0x36, addr_arr[0], addr_arr[1], addr_arr[2], addr_arr[3]])
         ret = ecom.toyota_loop_getstatus(CID, 0x10, 0x01)
         if(ret != ""):
-            print "[!] CheckBlock Error: %02X" % (ret)
+            print("[!] CheckBlock Error: %02X" % (ret))
             sys.exit(1)
 
         #EraseBlock
         ecom.send_iso_tp_data(CID, [0x26, addr_arr[0], addr_arr[1], addr_arr[2], addr_arr[3]])
         ret = ecom.toyota_loop_getstatus(CID, 0x80)
         if(ret != ""):
-            print "[!] EraseBlock Error: %02X" % (ret)
+            print("[!] EraseBlock Error: %02X" % (ret))
             sys.exit(1)
 
         #WriteBlock with address
@@ -184,8 +184,8 @@ if __name__ == "__main__":
         ret = ecom.send_iso_tp_data(CID, chunk_arr)
         ret = ecom.toyota_loop_getstatus(CID, 0x40)
         if(ret != ""):
-            print "[!] WriteBlock[0x41] Error: %02X" % (ret)
-            print chunk_arr
+            print("[!] WriteBlock[0x41] Error: %02X" % (ret))
+            print(chunk_arr)
             sys.exit(1) 
 
         total_written += 0x400
@@ -213,8 +213,8 @@ if __name__ == "__main__":
             ret = ecom.send_iso_tp_data(CID, chunk_arr)
             ret = ecom.toyota_loop_getstatus(CID, 0x40)
             if(ret != ""):
-                print "[!] WriteBlock[0x45] Error: %02X" % (ret)
-                print chunk_arr
+                print("[!] WriteBlock[0x45] Error: %02X" % (ret))
+                print(chunk_arr)
                 sys.exit(1)
 
             time.sleep(0.05)
@@ -225,8 +225,8 @@ if __name__ == "__main__":
         ecom.send_iso_tp_data(CID, [0x48, addr_arr[0], addr_arr[1], addr_arr[2], addr_arr[3]])
         ret = ecom.toyota_loop_getstatus(CID, 0x40)
         if(ret != ""):
-            print "[!] InVerifyBlock Error: %02X" % (ret)
-            print chunk_arr
+            print("[!] InVerifyBlock Error: %02X" % (ret))
+            print(chunk_arr)
             sys.exit(1)    
 
         #VerifyBlock
@@ -243,8 +243,8 @@ if __name__ == "__main__":
             #get an OK status
             ret = ecom.toyota_loop_getstatus(CID, 0x20)
             if(ret != ""):
-                print "[!] VerifyBlock Error: %02X" % (ret)
-                print verify_chunk
+                print("[!] VerifyBlock Error: %02X" % (ret))
+                print(verify_chunk)
                 sys.exit(1)             
 
             vindex += 0x100

@@ -30,12 +30,12 @@ def key_from_seed(wid, seed, mode):
 
     secret = ""
     if mode == 1:
-        if not secret_keys.has_key(wid):
+        if wid not in secret_keys:
             return [0,0,0]
  
         secret = secret_keys[wid]
     else:
-        if not secret_keys2.has_key(wid):
+        if wid not in secret_keys2:
             return [0,0,0]
         secret = secret_keys2[wid]
         
@@ -72,20 +72,20 @@ def do_routine(mydll, handle, wid, routineIdentifier, options):
     	yy = pointer(SFFMessage())
         data = [0x31,1,rhigh,rlow] + options
 	resp = send_data(mydll, handle, wid, data)
-        print "[%02X] Calling routine %04X: " % (wid, routineIdentifier),
+        print("[%02X] Calling routine %04X: " % (wid, routineIdentifier), end=' ')
         if not resp:
-                print "No response"
+                print("No response")
                 return
         if resp[0] == 0x71:
-                print "Worked"
+                print("Worked")
                 return
 	if resp[1] != 0x31:
-		print "Weird, got wrong response"
+		print("Weird, got wrong response")
             	return
 	if resp[0] == 0x7f:
-            	print "Failed, error code %02X" % resp[2]
+            	print("Failed, error code %02X" % resp[2])
         else:
-            	print "worked, got %02X" % resp[2]
+            	print("worked, got %02X" % resp[2])
 
 
 def do_routine_14230_by_address(mydll, handle, wid, address, options):
@@ -95,67 +95,67 @@ def do_routine_14230_by_address(mydll, handle, wid, address, options):
 
         data = [0x38,address1,address2,address3] + options
 	resp = send_data(mydll, handle, wid, data)
-        print "[%02X] Calling routine %X: " % (wid, address),
+        print("[%02X] Calling routine %X: " % (wid, address), end=' ')
         if not resp:
-                print "No response"
+                print("No response")
                 return
         if resp[0] == 0x78:
-                print "Worked"
+                print("Worked")
                 return
 	if resp[1] != 0x38:
-		print "Weird, got wrong response"
+		print("Weird, got wrong response")
             	return
 	if resp[0] == 0x7f:
-            	print "Failed, error code %02X" % resp[2]
+            	print("Failed, error code %02X" % resp[2])
         else:
-            	print "worked, got %02X" % resp[2]
+            	print("worked, got %02X" % resp[2])
 
 
 def do_routine_14230(mydll, handle, wid, routineIdentifier, options):
         data = [0x31,routineIdentifier] + options
 	resp = send_data(mydll, handle, wid, data)
-        print "[%02X] Calling routine %04X: " % (wid, routineIdentifier),
+        print("[%02X] Calling routine %04X: " % (wid, routineIdentifier), end=' ')
         if not resp:
-                print "No response"
+                print("No response")
                 return
         if resp[0] == 0x71:
-                print "Worked"
+                print("Worked")
                 return
 	if resp[1] != 0x31:
-		print "Weird, got wrong response"
+		print("Weird, got wrong response")
             	return
 	if resp[0] == 0x7f:
-            	print "Failed, error code %02X" % resp[2]
+            	print("Failed, error code %02X" % resp[2])
         else:
-            	print "worked, got %02X" % resp[2]
+            	print("worked, got %02X" % resp[2])
 
 
 def do_routine_14230_get_response(mydll, handle, wid, routineIdentifier, options):
         data = [0x31,routineIdentifier] + options
 	resp = send_data(mydll, handle, wid, data)
-        print "[%02X] Calling routine %04X: " % (wid, routineIdentifier),
+        print("[%02X] Calling routine %04X: " % (wid, routineIdentifier), end=' ')
         if not resp:
-                print "No response"
+                print("No response")
                 return []
         if resp[0] == 0x71:
-                print "Worked"
+                print("Worked")
 	elif resp[1] != 0x31:
-		print "Weird, got wrong response"
+		print("Weird, got wrong response")
             	return []
 	elif resp[0] == 0x7f:
-            	print "Failed, error code %02X" % resp[2]
+            	print("Failed, error code %02X" % resp[2])
             	return []
         ret = []
         while len(ret) == 0:
             resp = send_data(mydll, handle, wid, [0x33, routineIdentifier])
             if resp[0] == 0x7f and resp[1] == 0x33 and resp[2] == 0x21:
-                print "."
+                print(".")
             elif resp[0] == 0x73:
-                print "worked 2"
+                print("worked 2")
 #                print resp
                 return resp[2:]
             else:
-                print "?"
+                print("?")
             time.sleep(.1)
         
 
@@ -210,7 +210,7 @@ def send_data(mydll, handle, wid, data):
 		counter = 0
         	mydll.PrintSFF(z,0)
 		if z.contents.data[0] != 0x30:
-			print "Bad response"
+			print("Bad response")
 			return []
 
 		# rest
@@ -270,27 +270,27 @@ def send_data(mydll, handle, wid, data):
 
 def try_ids(mydll, handle, wid):
     for x in range(0,255):
-        print "Trying %02X:" % x,
+        print("Trying %02X:" % x, end=' ')
         ret = send_data(mydll, handle, wid, [x])
         while len(ret) == 0 or ret[2] == 0x21:
             ret = send_data(mydll, handle, wid, [0x10,x])
         if ret[2] != 0x11:
-            print "Yes %x" % ret[2]
+            print("Yes %x" % ret[2])
         else:
-            print "No %x" % ret[2]
+            print("No %x" % ret[2])
 
  
 # the final line needs to be changed for 14230 to 81...
 def try_all_diagnostic_sessions(mydll, handle, wid):
     for x in range(0,255):
-        print "Trying %02X:" % x,
+        print("Trying %02X:" % x, end=' ')
         ret = send_data(mydll, handle, wid, [0x10,x])
         while len(ret) == 0 or ret[2] == 0x21:
             ret = send_data(mydll, handle, wid, [0x10,x])
         if ret[0] == 0x50:
-            print "Yes"
+            print("Yes")
         else:
-            print "No"
+            print("No")
         send_data(mydll, handle, wid, [0x10, 0x1])
 
 def do_diagnostic_session(mydll, handle, wid, session_type):
@@ -308,14 +308,14 @@ def do_diagnostic_session(mydll, handle, wid, session_type):
 
     ret = send_data(mydll, handle, wid, [0x10, tn_byte])
     if not ret:
-        print "No response"
+        print("No response")
         return False
     if ret[0] == 0x50:
         return True
     # try 80 one:
     ret = send_data(mydll, handle, wid, [0x10, t_byte])
     if not ret:
-        print "No response"
+        print("No response")
         return False
     if ret[0] == 0x50:
         return True
@@ -326,7 +326,7 @@ def do_diagnostic_session(mydll, handle, wid, session_type):
         mydll.PrintSFF(z,0)
         if z.contents.data[1] == 0x50:
             return True
-    print "Couldn't start diagnostic session"
+    print("Couldn't start diagnostic session")
     return False
 
 
@@ -334,7 +334,7 @@ def do_diagnostic_session(mydll, handle, wid, session_type):
 def do_security_access2(mydll, handle, wid):
     seed = send_data(mydll, handle, wid, [0x27,3])
     if not seed:
-        print "no response"
+        print("no response")
         return
     strseed = ''
     for x in seed:
@@ -347,7 +347,7 @@ def do_security_access2(mydll, handle, wid):
 def do_security_access(mydll, handle, wid):
     seed = send_data(mydll, handle, wid, [0x27,1])
     if not seed:
-        print "no response"
+        print("no response")
         return
     strseed = ''
     for x in seed:
@@ -356,9 +356,9 @@ def do_security_access(mydll, handle, wid):
     key = key_from_seed(wid, strseed[6:], 1)
     ret = send_data(mydll, handle, wid, [0x27,2]+key)
     if ret[0] == 0x67:
-	print "Got access"
+	print("Got access")
     else:
-	print "Denied!"
+	print("Denied!")
 
 
 
@@ -381,9 +381,9 @@ def do_write_memory(mydll, handle, wid, address, d):
     if resp[0] == 0x7d:
         return resp        
     if resp[1] != 0x3d:
-        print "Weird response"
+        print("Weird response")
         return []
-    print "Failed to write memory, error %x" % resp[2]
+    print("Failed to write memory, error %x" % resp[2])
     return resp
 
 #
@@ -400,12 +400,12 @@ def do_read_memory_14430(mydll, handle, wid, address, size):
 
 	resp = send_data(mydll, handle, wid, [0x23, address1, address2, address3, address4, size1, size2])
 	if resp[0] == 0x63:
-                print "OMG, it worked"
+                print("OMG, it worked")
 		return resp[1:]
 	if resp[1] != 0x23:
-		print "Weird response"
+		print("Weird response")
 		return []
-	print "Failed to read memory, error %x" % resp[2]
+	print("Failed to read memory, error %x" % resp[2])
 	return resp
 
 def do_read_memory(mydll, handle, wid, address, size):
@@ -427,9 +427,9 @@ def do_read_memory(mydll, handle, wid, address, size):
     if resp[0] == 0x63:
         return resp[1:]
     if resp[1] != 0x23:
-        print "Weird response"
+        print("Weird response")
         return []
-    print "Failed to read memory, error %x" % resp[2]
+    print("Failed to read memory, error %x" % resp[2])
     return resp
 
 def do_inputoutput(mydll, handle, wid, inputoutputID, options):
@@ -438,15 +438,15 @@ def do_inputoutput(mydll, handle, wid, inputoutputID, options):
     	yy = pointer(SFFMessage())
         data = [0x2f,rhigh,rlow] + options
 	resp = send_data(mydll, handle, wid, data)
-        print "[%02X] Calling IO %04X: " % (wid, inputoutputID),
+        print("[%02X] Calling IO %04X: " % (wid, inputoutputID), end=' ')
         if not resp:
-                print "No response"
+                print("No response")
                 return False
 	if resp[0] == 0x7f:
-            	print "Failed, error code %02X" % resp[2]
+            	print("Failed, error code %02X" % resp[2])
             	return False
         else:
-            	print "worked, got %02X" % resp[2]
+            	print("worked, got %02X" % resp[2])
                 return True
 
 def do_inputoutput_14230(mydll, handle, wid, inputoutputID, options):
@@ -455,35 +455,35 @@ def do_inputoutput_14230(mydll, handle, wid, inputoutputID, options):
     	yy = pointer(SFFMessage())
         data = [0x30,id1] + options
 	resp = send_data(mydll, handle, wid, data)
-        print "[%02X] Calling IO %02X: " % (wid, id1),
+        print("[%02X] Calling IO %02X: " % (wid, id1), end=' ')
         if not resp:
-                print "No response"
+                print("No response")
                 return False
 	if resp[0] == 0x7f:
-            	print "Failed, error code %02X" % resp[2]
+            	print("Failed, error code %02X" % resp[2])
             	return False
         else:
-            	print "worked, got %02X" % resp[2]
+            	print("worked, got %02X" % resp[2])
                 return True
 
 
 def search_for_readable_memory(mydll, handle, wid):
     x = 0x0
     while x < 0xffff00:
-        print "Reading from %x" % x,
-        print do_read_memory(mydll, handle, wid, x, 0x10)
+        print("Reading from %x" % x, end=' ')
+        print(do_read_memory(mydll, handle, wid, x, 0x10))
         x += 0x100
 
 
 def search_for_pullable_memory(mydll, handle, wid):
     x = 0x0
     while x < 0xffff00:
-        print "Reading from %x" % x
+        print("Reading from %x" % x)
         ret = pull_data(mydll, handle, wid, x, 0x10)
         if len(ret)>0:
-            print "Yes from %x" % x
+            print("Yes from %x" % x)
         else:
-            print "No from %x" % x
+            print("No from %x" % x)
         x += 0x100
         # RequestTransferExit
         send_data(mydll, handle, wid, [0x37])
@@ -509,15 +509,15 @@ def pull_data_14230(mydll, handle, wid, address, size):
 	
 	# check for error codes
 	if resp[0] != 0x75:
-		print "Bad response"
-		print resp
+		print("Bad response")
+		print(resp)
 		return []
 	
 	resp = send_data(mydll, handle, wid, [0x36, 0x01])
 	if resp[0] == 0x76:
-		print "omg it worked"
+		print("omg it worked")
 		return resp[1:]
-	print "error!"
+	print("error!")
 	return []
 
 
@@ -544,15 +544,15 @@ def pull_data(mydll, handle, wid, address, size):
 	
 	# check for error codes
 	if resp[0] != 0x75:
-		print "Bad response"
-		print resp
+		print("Bad response")
+		print(resp)
 		return []
 	
 	resp = send_data(mydll, handle, wid, [0x36, 0x01])
 	if resp[0] == 0x76:
-		print "omg it worked"
+		print("omg it worked")
 		return resp[1:]
-	print "error!"
+	print("error!")
 	return []
 
 
@@ -567,10 +567,10 @@ def do_proprietary(mydll, handle, wid, did, options):
 	
 	# check for error codes
 	if resp[0] != 0xf1:
-		print "Bad response"
-		print resp
+		print("Bad response")
+		print(resp)
 		return []
-	print "worked %04X with len %d" % (did, len(options))
+	print("worked %04X with len %d" % (did, len(options)))
 	return resp[1:]
 
 
@@ -594,27 +594,27 @@ def brute_force_key(mydll, handle, wid):
             while len(seed) == 0:
                 send_data(mydll, handle, wid, [0x11, 0x01])
                 seed = send_data(mydll, handle, wid, [0x27,1])[2:5]
-            print seed
+            print(seed)
             seed = (seed[0] << 16) + (seed[1]<<8) + (seed[2])
-            print "Got seed %x" % seed
-            if not tries.has_key(seed):
+            print("Got seed %x" % seed)
+            if seed not in tries:
 		tries[seed] = 0
 
             key = tries[seed]
 
             ret = try_key(mydll, handle, wid, key)
             if not ret:
-		print "No repsonse"
+		print("No repsonse")
             elif ret[0] == 0x67:
-		print "Found it: %x %x" % (seed, key)
+		print("Found it: %x %x" % (seed, key))
 		return
             elif ret[0] == 0x7f and ret[1] == 0x27:
-		print "Not it for %x %x, error %x" % (seed, key, ret[2])
+		print("Not it for %x %x, error %x" % (seed, key, ret[2]))
 		tries[seed] = key + 1	
             else:
-		print "Weird response"
+		print("Weird response")
 
-            print tries
+            print(tries)
 
 
 def test_ecu(mydll, handle, wid):
@@ -628,11 +628,11 @@ def test_ecu(mydll, handle, wid):
 
 	# do tests with programming session
         time.sleep(1)
-	print "Programming"
+	print("Programming")
     	do_diagnostic_session(mydll, handle, wid, "normal")
     	time.sleep(1)
 	if do_diagnostic_session(mydll, handle, wid, "prog"):
-		print "Started diagnostic session"
+		print("Started diagnostic session")
         time.sleep(1)
 	do_security_access(mydll, handle, wid)
 
@@ -656,11 +656,11 @@ def test_ecu(mydll, handle, wid):
 	do_security_access2(mydll, handle, wid)
 
 
-	print "Adjustment"
+	print("Adjustment")
 	do_diagnostic_session(mydll, handle, wid, "normal")
         time.sleep(5)
         if do_diagnostic_session(mydll, handle, wid, "adj"):
-                print "Started diagnostic session"
+                print("Started diagnostic session")
         do_security_access2(mydll, handle, wid)
 
         for addy in [0,0x10,0x100,0x1000,0x10000,0x100000,0x1000000,0x10000000]:
@@ -709,43 +709,43 @@ def do_download_compliant(mydll, handle, wid, address, filename):
         resp = send_data(mydll, handle, wid, data)
 
         if resp[0] != 0x74:
-                print "Bad response to request download"
-                print resp
+                print("Bad response to request download")
+                print(resp)
                 return False
 
         packetsize = resp[3]
-        print "worked with packetsize %d" % packetsize
+        print("worked with packetsize %d" % packetsize)
 
         cur = 0
-        print "size is %d" % size
+        print("size is %d" % size)
 	packetnum = 1
         while cur + packetsize < size:
-                print "Sending bytes from %d" % cur
+                print("Sending bytes from %d" % cur)
                 data = [0x36, packetnum] + listify(filedata[cur:cur+packetsize-2])
                 resp = send_data(mydll, handle, wid, data)
                 if resp[0] != 0x76:
-                        print "Bad response to data transfer"
-                        print resp
+                        print("Bad response to data transfer")
+                        print(resp)
                         return False
                 cur += packetsize - 2
 		packetnum += 1
 
-        print "sending end"
+        print("sending end")
         data = [0x36, packetnum] + listify(filedata[cur:])
         resp = send_data(mydll, handle, wid, data)
         if resp[0] != 0x76:
-                print "Bad response to data transfer"
-                print resp
+                print("Bad response to data transfer")
+                print(resp)
                 return False
 
         resp = send_data(mydll, handle, wid, [0x37])
 
         if resp[0] != 0x77:
-                print "Bad response to data exit"
-                print resp
+                print("Bad response to data exit")
+                print(resp)
                 return False
 
-        print "Looks good!"
+        print("Looks good!")
         return True
 
 
@@ -769,40 +769,40 @@ def do_download(mydll, handle, wid, address, filename):
 	resp = send_data(mydll, handle, wid, data)
         
 	if resp[0] != 0x74:
-                print "Bad response to request download"
-                print resp
+                print("Bad response to request download")
+                print(resp)
                 return False
 
 	packetsize = resp[2]
-        print "worked with packetsize %d" % packetsize
+        print("worked with packetsize %d" % packetsize)
 	
 	cur = 0
-	print "size is %d" % size
+	print("size is %d" % size)
 	while cur + packetsize < size:
-                print "Sending bytes from %d" % cur
+                print("Sending bytes from %d" % cur)
 		data = [0x36] + listify(filedata[cur:cur+packetsize-1])
 		resp = send_data(mydll, handle, wid, data)
         	if resp[0] != 0x76:
-                	print "Bad response to data transfer"
-                	print resp
+                	print("Bad response to data transfer")
+                	print(resp)
                 	return False
 		cur += packetsize - 1
 
-        print "sending end"
+        print("sending end")
 	data = [0x36] + listify(filedata[cur:])
         resp = send_data(mydll, handle, wid, data)
         if resp[0] != 0x76:
-        	print "Bad response to data transfer"
-       		print resp
+        	print("Bad response to data transfer")
+       		print(resp)
         	return False
 
 	resp = send_data(mydll, handle, wid, [0x37])
 
         if resp[0] != 0x77:
-                print "Bad response to data exit"
-                print resp
+                print("Bad response to data exit")
+                print(resp)
                 return False
 
-        print "Looks good!"
+        print("Looks good!")
 	return True
 

@@ -506,7 +506,7 @@ def send_data(mydll, handle, wid, data):
 		counter = 0
         	mydll.PrintSFF(z,0)
 		if z.contents.data[0] != 0x30:
-			print "Bad response"
+			print("Bad response")
 			return []
 
 		# rest
@@ -567,14 +567,14 @@ def send_data(mydll, handle, wid, data):
 def do_diagnostic_session(mydll, handle, wid):
     ret = send_data(mydll, handle, wid, [0x10,3])
     if not ret:
-        print "No response"
+        print("No response")
         return False
     if ret[0] == 0x50:
         return True
     # try 80 one:
     ret = send_data(mydll, handle, wid, [0x10,0x85])
     if not ret:
-        print "No response"
+        print("No response")
         return False
     if ret[0] == 0x50:
         return True
@@ -585,7 +585,7 @@ def do_diagnostic_session(mydll, handle, wid):
         mydll.PrintSFF(z,0)
         if z.contents.data[1] == 0x50:
             return True
-    print "Couldn't start diagnostic session"
+    print("Couldn't start diagnostic session")
     return False
 
 
@@ -595,7 +595,7 @@ def do_diagnostic_session(mydll, handle, wid):
 def do_security_access(mydll, handle, wid, secret):
         seed = send_data(mydll, handle, wid, [0x27,1])
         if not seed:
-                print "no response"
+                print("no response")
                 return False
         strseed = ''
         for x in seed:
@@ -603,16 +603,16 @@ def do_security_access(mydll, handle, wid, secret):
         key = key_from_seed(strseed[6:], secret)
         ret = send_data(mydll, handle, wid, [0x27,2]+key)
         if not ret:
-                print "No repsonse"
+                print("No repsonse")
                 return False
         elif ret[0] == 0x67:
-                print "Found it: " + secret
+                print("Found it: " + secret)
                 sys.exit(0)
         elif ret[0] == 0x7f and ret[1] == 0x27:
-                print "Not it for " + secret + "error %x" % (ret[2])
+                print("Not it for " + secret + "error %x" % (ret[2]))
                 return True
         else:
-                print "Weird response"
+                print("Weird response")
                 return False
 
 
@@ -639,7 +639,7 @@ def do_security_access_stage2(mydll, handle, wid, secret1, secret2):
 	## second stage
         seed = send_data(mydll, handle, wid, [0x27,3])
         if not seed:
-                print "no response"
+                print("no response")
                 return False
         strseed = ''
         for x in seed:
@@ -647,16 +647,16 @@ def do_security_access_stage2(mydll, handle, wid, secret1, secret2):
         key = key_from_seed(strseed[6:], secret2)
         ret = send_data(mydll, handle, wid, [0x27,4]+key)
         if not ret:
-                print "No repsonse"
+                print("No repsonse")
                 return False
         elif ret[0] == 0x67:
-                print "Found it: " + secret2
+                print("Found it: " + secret2)
                 sys.exit(0)
         elif ret[0] == 0x7f and ret[1] == 0x27:
-                print "Not it for " + secret2 + "error %x" % (ret[2])
+                print("Not it for " + secret2 + "error %x" % (ret[2]))
                 return True
         else:
-                print "Weird response"
+                print("Weird response")
                 return False
 
 
@@ -671,7 +671,7 @@ wid = 0x726
 
 #raw_input("make sure car is in bootrom mode, use CarDaqPlusCat")
 if do_diagnostic_session(mydll, handle, wid):
-    print "Started diagnostic session"
+    print("Started diagnostic session")
 #do_security_access(mydll, handle, wid, "5B 41 74 65 7D",keybag[0])
 
 for secret in keybag:

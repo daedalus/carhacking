@@ -8,7 +8,7 @@ fileb_ids = []
 fileb_ids_diff = []
 
 if(len(sys.argv) < 2):
-    	print "Usage: %s <file1> " % (sys.argv[0])
+    	print("Usage: %s <file1> " % (sys.argv[0]))
 	sys.exit(1)
 
 file_a = sys.argv[1]
@@ -21,6 +21,6 @@ for line in fpfilea:
 		wheel1 = int(data[0:2],16)<<8
 		wheel2 = (int(data[3:5],16))
 		wheel = wheel1 + wheel2
-		print wheel
+		print(wheel)
 fpfilea.close()
 

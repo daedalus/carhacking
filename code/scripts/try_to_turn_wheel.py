@@ -17,7 +17,7 @@ while True:
 
     line = beg_line + middle + end_line
 
-    print middle
+    print(middle)
     line = "\"" + line + "\""
     call(["ECOMCat.exe", line, step_time])
     #print ["ECOMCat.exe", line, 5000]

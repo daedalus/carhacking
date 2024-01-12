@@ -5,7 +5,7 @@ output = ""
 
 optlist, args = getopt.getopt(sys.argv[1:], ':o:')
 if(len(args) < 2):
-    print "Usage: %s [options] <cardaq.dat> <real_cap.dat>" % (sys.argv[0])
+    print("Usage: %s [options] <cardaq.dat> <real_cap.dat>" % (sys.argv[0]))
     sys.exit(1)
 
 for o, a in optlist:
@@ -27,7 +27,7 @@ for line in fplock:
         filea_msgs.append(line)
 fplock.close()
 
-print "[*] FileA parsed..."
+print("[*] FileA parsed...")
 
 i = 0
 fplock = open(file_b)
@@ -37,7 +37,7 @@ for line in fplock:
         fileb_msgs.append(line)
 fplock.close()
 
-print "[*] FilesB parsed..."
+print("[*] FilesB parsed...")
 
 for msg in filea_msgs:
     if not msg in fileb_msgs:
@@ -48,17 +48,17 @@ if(output != ""):
     of = open(output, "w")
     
 filea_cnt = "Only %s [%d lines]" % (file_a, len(filea_msgs_diff))
-print filea_cnt
+print(filea_cnt)
 
 if(of):
     of.write(filea_cnt + '\n')
 
 for msg in filea_msgs_diff:
-    print str(msg)
+    print(str(msg))
     if(of):
         of.write(str(msg) + '\n')
 
-print "\n"
+print("\n")
 if(of):
     of.write('\n')
 

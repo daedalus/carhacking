@@ -18,7 +18,7 @@ if __name__ == "__main__":
     for i in range(0, num_of_sffs):
         ecom.mydll.DbgLineToSFF(sff_lines[i], pointer(sffs[i]))
 
-    print "Starting to send msgs"
+    print("Starting to send msgs")
     
     #ecom.mydll.write_messages_from_file(ecom.handle, "input.dat")
     #ecom.send_iso_tp_data(0x781, [0x30, 0x01, 0x00, 0x01])

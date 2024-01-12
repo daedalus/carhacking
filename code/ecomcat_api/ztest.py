@@ -36,7 +36,7 @@ if __name__ == "__main__":
         ret = ecom.send_iso_tp_data(0x750, [0x27, 0x02, key], 0x40)
 
         if ret[2] != 0x35:
-            print "New Error: %d %d" % (key, i)
+            print("New Error: %d %d" % (key, i))
             break
 
     ret = ecom.request_upload_14229(ECU, 0x01, 0x44, 0x0000F000, 0x00000001, 0x40)

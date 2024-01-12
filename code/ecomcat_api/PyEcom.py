@@ -69,7 +69,7 @@ class PyEcom:
             sff_resp = self.mydll.read_message_by_wid_with_timeout(self.handle, wid+8, 1000)
 
             if not sff_resp:
-                print "No Response"
+                print("No Response")
                 return []
 
             sent = 5
@@ -77,7 +77,7 @@ class PyEcom:
             self.mydll.PrintSFF(sff_resp,0)
             
             if sff_resp.contents.data[1] != 0x30:
-                    print "Bad response"
+                    print("Bad response")
                     return []
 
             #send the remaining data
@@ -135,7 +135,7 @@ class PyEcom:
         while( toread > 0 ):
             sff_resp = self.mydll.read_message_by_wid_with_timeout(self.handle, wid+8, 1000)
             toread -= 6
-            print sff_resp.contents.data
+            print(sff_resp.contents.data)
             ret += sff_resp.contents.data[2:]
             self.mydll.PrintSFF(sff_resp,0)
         return ret[:total_to_read]
@@ -207,7 +207,7 @@ class PyEcom:
             if sff_resp:
                 self.mydll.PrintSFF(sff_resp,0)
                 if sff_resp.contents.data[0] != 0x30:
-                        print "Bad response"
+                        print("Bad response")
                         return []
             else:
                 return []
@@ -323,7 +323,7 @@ class PyEcom:
 
         err = self.get_error(ret)
         if err != 0x00:
-            print "Error: %s" % (NegRespErrStr(err))
+            print("Error: %s" % (NegRespErrStr(err)))
             return False
 
     def toyota_getstatus(self, wid):
@@ -351,7 +351,7 @@ class PyEcom:
         data = str_target_data
 
         if len(data) % 2 != 0:
-            print "TargetData must have an EVEN number of characters"
+            print("TargetData must have an EVEN number of characters")
 
         j = 0
         total = ""
@@ -393,7 +393,7 @@ class PyEcom:
             add += 1
             shifter -= 4
 
-        print targetdata
+        print(targetdata)
         return targetdata
 
     def toyota_cracker(self, wid, data=[0x27, 0x01], byte_id=None):
@@ -406,18 +406,18 @@ class PyEcom:
         #start diagnostic session first
         ret = self.diagnostic_session(wid, [0x10, 0x01], byte_id)
         if(not ret):
-            print "[!] Diagnostic Session: Failed"
+            print("[!] Diagnostic Session: Failed")
             return False
 
         resp = self.send_iso_tp_data(wid, data, byte_id)        
         
         if not resp or len(resp) == 0:
-            print "No Response"
+            print("No Response")
             return False
 
         err = self.get_error(resp)
         if err != 0x00:
-            print "Error: %s" % (NegRespErrStr(err))
+            print("Error: %s" % (NegRespErrStr(err)))
             return False
 
         #constants when calculating keys are taken from the response
@@ -459,11 +459,11 @@ class PyEcom:
             resp = self.send_iso_tp_data(wid, key_data, byte_id)
             if(resp[0] == 0x67):
                 found_key = True
-                print "Found the KEY: %02X %02X" % (guess_1, guess_2)
+                print("Found the KEY: %02X %02X" % (guess_1, guess_2))
             else:
                 err = self.get_error(resp)
                 if err != 0x35 and err != 0x36:           
-                    print "Error: %s" % (NegRespErrStr(err))
+                    print("Error: %s" % (NegRespErrStr(err)))
                     return False
 
             key_guess = (key_guess + 1) & 0xFFFF
@@ -476,10 +476,10 @@ class PyEcom:
 
         num_of_secrets = len(PriusSecrets)
         if(len(seed) != num_of_secrets):
-            print "SeedKey Mismatch: SeedLen: %d Number of Secrets: %d" % (len(seed), num_of_secrets)
+            print("SeedKey Mismatch: SeedLen: %d Number of Secrets: %d" % (len(seed), num_of_secrets))
             return []
 
-        print "Seed: %s" % (self.get_pretty_print(seed))
+        print("Seed: %s" % (self.get_pretty_print(seed)))
         for i in range(0, num_of_secrets):
             #print "%04X" % (PriusSecrets[i])
 
@@ -499,7 +499,7 @@ class PyEcom:
             seed[2] = key_piece >> 8 & 0xFF
             seed[3] = key_piece & 0xFF
 
-            print "Key: %02X %02X %02X %02X" % (seed[0], seed[1], seed[2], seed[3])
+            print("Key: %02X %02X %02X %02X" % (seed[0], seed[1], seed[2], seed[3]))
 
         #print "Key: %02X %02X %02X %02X" % (seed[0], seed[1], seed[2], seed[3])
         return seed
@@ -515,16 +515,16 @@ class PyEcom:
         resp = self.send_iso_tp_data(wid, self.get_security_access_payload(wid), byte_id)
 
         if not resp or len(resp) == 0:
-            print "No Response"
+            print("No Response")
             return False
 
         err = self.get_error(resp)
         if err != 0x00:
-            print "Error: %s" % (NegRespErrStr(err))
+            print("Error: %s" % (NegRespErrStr(err)))
             return False
         elif err == 0x00:
             if resp[2] == 0 and resp[3] == 0 and resp[4] == 0 and resp[5] == 0:
-                print "Already authenticated"
+                print("Already authenticated")
                 return True
 
         #generate the key from the seed and the secrets
@@ -552,7 +552,7 @@ class PyEcom:
         seed = self.send_iso_tp_data(wid, key_data, byte_id)
         err = self.get_error(seed)
         if err != 0x00:
-            print "Error: %s" % (NegRespErrStr(err))
+            print("Error: %s" % (NegRespErrStr(err)))
             return False
             
         return True
@@ -565,12 +565,12 @@ class PyEcom:
         
         resp = self.send_iso_tp_data(wid, [0x31, subfunc, msb_rid, lsb_rid], byte_id)
         if not resp or len(resp) == 0:
-            print "No Response"
+            print("No Response")
             return False
 
         err = self.get_error(resp)
         if err != 0x00:
-            print "Error: %s" % (NegRespErrStr(err))
+            print("Error: %s" % (NegRespErrStr(err)))
             return False
 
         return True
@@ -593,12 +593,12 @@ class PyEcom:
 
         resp = self.send_iso_tp_data(wid, payload, byte_id)
         if(not resp or len(resp) == 0):
-            print "RequestUpload: No Response"
+            print("RequestUpload: No Response")
             return False
 
         err = self.get_error(resp)
         if err != 0x00:
-            print "Error[0x%02X]: %s" % (err, NegRespErrStr(err))
+            print("Error[0x%02X]: %s" % (err, NegRespErrStr(err)))
             return False
 
         return True  
@@ -631,12 +631,12 @@ class PyEcom:
 
         resp = self.send_iso_tp_data(wid, payload, byte_id)
         if(not resp or len(resp) == 0):
-            print "RequestUpload: No Response"
+            print("RequestUpload: No Response")
             return False
 
         err = self.get_error(resp)
         if err != 0x00:
-            print "Error[0x%02X]: %s" % (err, NegRespErrStr(err))
+            print("Error[0x%02X]: %s" % (err, NegRespErrStr(err)))
             return False
 
         return True            
@@ -677,12 +677,12 @@ class PyEcom:
 
         resp = self.send_iso_tp_data(wid, payload, byte_id)
         if(not resp or len(resp) == 0):
-            print "RequestUpload: No Response"
+            print("RequestUpload: No Response")
             return False
 
         err = self.get_error(resp)
         if err != 0x00:
-            print "Error[0x%02X]: %s" % (err, NegRespErrStr(err))
+            print("Error[0x%02X]: %s" % (err, NegRespErrStr(err)))
             return False
 
         return True
@@ -713,12 +713,12 @@ class PyEcom:
 
         resp = self.send_iso_tp_data(wid, payload, byte_id)
         if(not resp or len(resp) == 0):
-            print "RequestUpload: No Response"
+            print("RequestUpload: No Response")
             return False
 
         err = self.get_error(resp)
         if err != 0x00:
-            print "Error[0x%02X]: %s" % (err, NegRespErrStr(err))
+            print("Error[0x%02X]: %s" % (err, NegRespErrStr(err)))
             return False
 
         return True
@@ -732,12 +732,12 @@ class PyEcom:
         resp = self.send_iso_tp_data(wid, payload, None)
 
         if(not resp or len(resp) == 0):
-            print "RequestUpload: No Response"
+            print("RequestUpload: No Response")
             return False
 
         err = self.get_error(resp)
         if err != 0x00:
-            print "Error[0x%02X]: %s" % (err, NegRespErrStr(err))
+            print("Error[0x%02X]: %s" % (err, NegRespErrStr(err)))
             return []
 
         return resp[1:]
@@ -745,7 +745,7 @@ class PyEcom:
     def transfer_exit(wid):
         resp = self.send_iso_tp_data(wid, [0x37], None)
         if err != 0x00:
-            print "Error[0x%02X]: %s" % (err, NegRespErrStr(err))
+            print("Error[0x%02X]: %s" % (err, NegRespErrStr(err)))
             return False
 
         return True

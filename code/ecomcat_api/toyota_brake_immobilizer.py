@@ -12,7 +12,7 @@ if __name__ == "__main__":
     ecom.mydll.DbgLineToSFF(brake_sff_str, pointer(brake_sff))
     
 
-    print "Starting to send msgs"
+    print("Starting to send msgs")
     while(1):
         brake_sff.data[0] += 1 & 0x7F
         ecom.mydll.FixChecksum(pointer(brake_sff))
