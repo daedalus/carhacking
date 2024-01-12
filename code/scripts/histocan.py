@@ -21,8 +21,8 @@ if __name__ == "__main__":
 
     optlist, args = getopt.gnu_getopt(sys.argv[1:], ':o:ce')
 
-    if(len(args) < 1):
-        print("Usage: %s [options] <inputfile> [flags]" % (sys.argv[0]))
+    if (len(args) < 1):
+        print(f"Usage: {sys.argv[0]} [options] <inputfile> [flags]")
         print("Options:")
         print(" -o <outputfile>")
         print("Flags:")
@@ -34,49 +34,46 @@ if __name__ == "__main__":
     #print args
 
     for o, a in optlist:
-        if o == "-o":
-            output_file = a
         if o == "-c":
             create_id_files = True
-        if o == "-e":
+        elif o == "-e":
             try_ecomcat = True
 
+        elif o == "-o":
+            output_file = a
     #get the arguments
     input_file = args[0]
-        
+
     f = file(input_file, "r")
 
-    out_f = None
-    if(output_file != ""):
-        out_f = file(output_file, "w")
-
+    out_f = file(output_file, "w") if (output_file != "") else None
     msgs = []
     for line in f:
         msg = SFFMessage(line)
         if(msg.wid != 0):
             msgs.append(msg)
-        
+
     histo = Histogram(msgs)
     sff_codes = []
 
     for sff_code in sorted(histo, key=histo.get, reverse=True):
         if(output_file):
             out_f.write("%s %s\n" % (sff_code, histo[sff_code]))
-        
+
         print(sff_code, histo[sff_code])
         sff_codes.append(sff_code)
 
     if(out_f):
         out_f.close()
 
-    if(create_id_files):
+    if create_id_files:
         input_name = os.path.splitext(input_file)[0]
         for sff_code in sff_codes:
-            output_file = input_name + "_" + sff_code + ".dat"  
+            output_file = f"{input_name}_{sff_code}.dat"
             call(["python", "data_puller.py", input_file, output_file, sff_code])
 
-            if(try_ecomcat):
-                print("Running => ECOMCat %s" % (output_file))
+            if try_ecomcat:
+                print(f"Running => ECOMCat {output_file}")
                 call(["ECOMCat.exe", output_file])
                 #print "Please hit enter to continue"
                 #ch = sys.stdin.readline()

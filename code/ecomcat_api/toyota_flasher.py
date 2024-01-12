@@ -46,10 +46,7 @@ ECU = 0x7E0
 ecu_b1 = EcuBlock(0x00000000, 0xFF000000, 0x1000)
 ecu_b2 = EcuBlock(0xF7000100, 0xFF001000, None)
 
-blocks = []
-blocks.append(ecu_b1)
-blocks.append(ecu_b2)
-
+blocks = [ecu_b1, ecu_b2]
 #val = ecom.toyota_targetdata_to_dword("424433493A4B4B4D")
 #ECM Calibration 34715200
 #T-0052-11.cuw 03_TargetData=424433493A4B4B4D
@@ -68,7 +65,7 @@ if __name__ == "__main__":
     f = open("toyota_ecm.bin", "rb")
 
     #START PREAMBLE
-    if PREAMBLE == True:
+    if PREAMBLE:
 
         #ret = ecom.send_iso_tp_data(0x7E1, [0x09, 0x00])
 
@@ -83,13 +80,13 @@ if __name__ == "__main__":
         if ret == False:
             print("[!] [0x%04X] Security Access: FAILURE" % (ECU))
             sys.exit(1)
-            
+
         print("[*] [0x%04X] Security Access: Success" % (ECU))
 
         #Unsure but this happens 3x in the capture before diag programming mode
         #I think this may have to do w/ tellin other ECUs the one being reprogrammed
         #is going offline for a while and DO NOT set DTC codes
-        for i in range(0, 3):
+        for _ in range(0, 3):
             ret = ecom.send_iso_tp_data(0x720, [0xA0, 0x27])
 
         #Grequires the to be in half-on state (power on, engine off)
@@ -118,7 +115,7 @@ if __name__ == "__main__":
             print("[!] TargetData failed")
             sys.exit(1)
 
-        print("[*] Current Version: %s" % (ecu_version))
+        print(f"[*] Current Version: {ecu_version}")
 
         #ack that we got the data
         ecom.send_iso_tp_data(CID, [0x3C])
@@ -130,7 +127,7 @@ if __name__ == "__main__":
         #recv last response
         ret = ecom.recv_iso_tp_data(CID)
 
-        print("[*] Acuired MemoryInfo %s" % (mem_info)) 
+        print(f"[*] Acuired MemoryInfo {mem_info}")
     #END PREAMBLE
 
 
@@ -143,8 +140,6 @@ if __name__ == "__main__":
     ##### 6) VerifyBlock ######
     for block in blocks: 
 
-        #keep track of the total bytes written
-        total_written = 0
         block_data = []
 
         addr_arr = nbo_int_to_bytearr(block.address)
@@ -188,8 +183,7 @@ if __name__ == "__main__":
             print(chunk_arr)
             sys.exit(1) 
 
-        total_written += 0x400
-
+        total_written = 0 + 0x400
         #write the rest of the data
         while(True):
             if(block.length != None):
@@ -234,7 +228,7 @@ if __name__ == "__main__":
 
         verified_chunks = total_written / 0x100
         vindex = 0
-        for i in range(0, verified_chunks):
+        for _ in range(0, verified_chunks):
             verify_chunk = block_data[vindex:vindex+0x100]
 
             #write the 0x100 bytes to be verified
@@ -248,7 +242,7 @@ if __name__ == "__main__":
                 sys.exit(1)             
 
             vindex += 0x100
-            
+
     ####END OF FLASHING####
     ret = ecom.send_iso_tp_data(0x720, [0x80])
 

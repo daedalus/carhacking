@@ -1,12 +1,12 @@
 from subprocess import call
 filename = "drive_twitch.dat"
 
-print("Sending data from %s" % (filename))
+print(f"Sending data from {filename}")
 
 lines = []
 f = open(filename, "r")
 for line in f:
-    print("Calling Ecomcat %s" % (line))
+    print(f"Calling Ecomcat {line}")
     call(["Ecomcat.exe", "\"" + line + "\""])
     #print "Hit enter to continue"
     #yesno = raw_input("Hit enter to continue")

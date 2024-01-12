@@ -43,7 +43,7 @@ if __name__ == "__main__":
     PREAMBLE = False
 
     #START PREAMBLE
-    if PREAMBLE == True:
+    if PREAMBLE:
 
         #ret = ecom.send_iso_tp_data(0x7E1, [0x09, 0x00])
 
@@ -58,13 +58,13 @@ if __name__ == "__main__":
         if ret == False:
             print("[!] [0x%04X] Security Access: FAILURE" % (ECU))
             sys.exit(1)
-            
+
         print("[*] [0x%04X] Security Access: Success" % (ECU))
 
         #Unsure but this happens 3x in the capture before diag programming mode
         #I think this may have to do w/ tellin other ECUs the one being reprogrammed
         #is going offline for a while and DO NOT set DTC codes
-        for i in range(0, 3):
+        for _ in range(0, 3):
             ret = ecom.send_iso_tp_data(0x720, [0xA0, 0x27])
 
         #Grequires the to be in half-on state (power on, engine off)
@@ -93,7 +93,7 @@ if __name__ == "__main__":
             print("[!] TargetData failed")
             sys.exit(1)
 
-        print("[*] Current Version: %s" % (ecu_version))
+        print(f"[*] Current Version: {ecu_version}")
 
         #ack that we got the data
         ecom.send_iso_tp_data(CID, [0x3C])
@@ -105,41 +105,35 @@ if __name__ == "__main__":
         #recv last response
         ret = ecom.recv_iso_tp_data(CID)
 
-        print("[*] Acuired MemoryInfo %s" % (mem_info))     
+        print(f"[*] Acuired MemoryInfo {mem_info}")     
 
     #start interactive CAN Flashing session
-    while(1):
+    while 1:
         print("1) Send Msg | Get Ack")
-        print("2) Send Msg | Get AckData") 
+        print("2) Send Msg | Get AckData")
         print("3) Send Repeated Character")
         print("4) Send Data from file")
         print("5) GetStatus")
         print("q) Quit")
-        
+
         sys.stdout.write("Enter Choice: ")
         choice = sys.stdin.readline().strip()
 
         #Hit q to quit
-        if(choice == "q" or choice == "Q"):
+        if choice in ["q", "Q"]:
             break
 
         if choice == "1":
             sys.stdout.write("Enter Line: ")
             line = sys.stdin.readline().strip()
 
-            payload = []
-            for x in line.split(' '):
-                payload.append(int(x, 16))
-                
+            payload = [int(x, 16) for x in line.split(' ')]
             ret = ecom.send_iso_tp_data(0x01, payload)
         elif choice == "2":
             sys.stdout.write("Enter Line: ")
             line = sys.stdin.readline().strip()
 
-            payload = []
-            for x in line.split(' '):
-                payload.append(int(x, 16))
-                
+            payload = [int(x, 16) for x in line.split(' ')]
             ret = ecom.send_iso_tp_data(0x01, payload, None, RcvAckData)
         elif choice == "3":
             sys.stdout.write("Enter char,length: ")
@@ -151,10 +145,7 @@ if __name__ == "__main__":
             length = int(data[1].strip(), 16)
             print("Len: %04X" % (length))
 
-            payload = []
-            for i in range(0, length):
-                payload.append(val)
-
+            payload = [val for _ in range(0, length)]
             ret = ecom.send_iso_tp_data(0x01, payload)
         elif choice == "4":
             sys.stdout.write("Enter file,offset,length: ")
@@ -167,7 +158,7 @@ if __name__ == "__main__":
                 f = open(fn, "rb")
             except:
                 if not f:
-                    print("Bad filename: %s" % (fn))
+                    print(f"Bad filename: {fn}")
                     continue
 
             offset = data[1].strip()
@@ -175,21 +166,18 @@ if __name__ == "__main__":
 
             length = data[2].strip()
             length = int(length, 16)
-            
+
             f.seek(offset)
 
             file_data = f.read(length)
-            payload = []
-            for x in file_data:
-                payload.append(ord(x))
-
+            payload = [ord(x) for x in file_data]
             f.close()
 
             ret = ecom.send_iso_tp_data(0x01, payload)
         elif choice == "5":
             ret = ecom.toyota_getstatus(0x01)
             print(ret)
-        elif choice == "q" or choice == "Q":
+        elif choice in ["q", "Q"]:
             break
         else:
             continue

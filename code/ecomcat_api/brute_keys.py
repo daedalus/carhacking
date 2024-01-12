@@ -593,27 +593,25 @@ def do_diagnostic_session(mydll, handle, wid):
 
 # returns if it ran test okay.  Exits if it finds the right guy
 def do_security_access(mydll, handle, wid, secret):
-        seed = send_data(mydll, handle, wid, [0x27,1])
-        if not seed:
-                print("no response")
-                return False
-        strseed = ''
-        for x in seed:
-                strseed += "%02X " % x
-        key = key_from_seed(strseed[6:], secret)
-        ret = send_data(mydll, handle, wid, [0x27,2]+key)
-        if not ret:
-                print("No repsonse")
-                return False
-        elif ret[0] == 0x67:
-                print("Found it: " + secret)
-                sys.exit(0)
-        elif ret[0] == 0x7f and ret[1] == 0x27:
-                print("Not it for " + secret + "error %x" % (ret[2]))
-                return True
-        else:
-                print("Weird response")
-                return False
+    seed = send_data(mydll, handle, wid, [0x27,1])
+    if not seed:
+            print("no response")
+            return False
+    strseed = ''.join("%02X " % x for x in seed)
+    key = key_from_seed(strseed[6:], secret)
+    ret = send_data(mydll, handle, wid, [0x27,2]+key)
+    if not ret:
+        print("No repsonse")
+        return False
+    elif ret[0] == 0x67:
+        print(f"Found it: {secret}")
+        sys.exit(0)
+    elif ret[0] == 0x7f and ret[1] == 0x27:
+        print(f"Not it for {secret}" + "error %x" % (ret[2]))
+        return True
+    else:
+        print("Weird response")
+        return False
 
 
 
@@ -637,27 +635,25 @@ def do_security_access_stage2(mydll, handle, wid, secret1, secret2):
 #		return False
 
 	## second stage
-        seed = send_data(mydll, handle, wid, [0x27,3])
-        if not seed:
-                print("no response")
-                return False
-        strseed = ''
-        for x in seed:
-                strseed += "%02X " % x
-        key = key_from_seed(strseed[6:], secret2)
-        ret = send_data(mydll, handle, wid, [0x27,4]+key)
-        if not ret:
-                print("No repsonse")
-                return False
-        elif ret[0] == 0x67:
-                print("Found it: " + secret2)
-                sys.exit(0)
-        elif ret[0] == 0x7f and ret[1] == 0x27:
-                print("Not it for " + secret2 + "error %x" % (ret[2]))
-                return True
-        else:
-                print("Weird response")
-                return False
+    seed = send_data(mydll, handle, wid, [0x27,3])
+    if not seed:
+            print("no response")
+            return False
+    strseed = ''.join("%02X " % x for x in seed)
+    key = key_from_seed(strseed[6:], secret2)
+    ret = send_data(mydll, handle, wid, [0x27,4]+key)
+    if not ret:
+        print("No repsonse")
+        return False
+    elif ret[0] == 0x67:
+        print(f"Found it: {secret2}")
+        sys.exit(0)
+    elif ret[0] == 0x7f and ret[1] == 0x27:
+        print(f"Not it for {secret2}" + "error %x" % (ret[2]))
+        return True
+    else:
+        print("Weird response")
+        return False
 
 
 # initalize

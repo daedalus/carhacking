@@ -19,7 +19,7 @@ if __name__ == "__main__":
     #Unsure but this happens 3x in the capture before diag programming mode
     #I think this may have to do w/ tellin other ECUs the one being reprogrammed
     #is going offline for a while and DO NOT set DTC codes
-    for i in range(0, 3):
+    for _ in range(0, 3):
         ret = ecom.send_iso_tp_data(0x720, [0xA0, 0x27])
 
     ret = ecom.diagnostic_session(ECU, [0x10, 0x02])
@@ -28,6 +28,6 @@ if __name__ == "__main__":
     else:
         print("[*] [0x%04X] Programming Mode: Sucess" % (ECU))
 
-    for i in range(0, 10):
+    for _ in range(0, 10):
         ecom.send_iso_tp_data(0x7E0, [0x30, 0x1C, 0x00, 0x0F, 0xA5, 0x01])
 

@@ -56,7 +56,7 @@ class PyEcom:
             datalen = len(data)
             byteone = 0x10 + (0xf00 & datalen)
             bytetwo = 0xff & datalen
-            firstdata = [byteone, bytetwo] + data[0:5]
+            firstdata = [byteone, bytetwo] + data[:5]
             line = "IDH: %02X, IDL: %02X, Len: 08, Data: %02X " % (idh, idl, byte_id)
             line += self.data_to_line(firstdata, 8)
             self.mydll.DbgLineToSFF(line, sff_msg)
@@ -72,16 +72,14 @@ class PyEcom:
                 print("No Response")
                 return []
 
-            sent = 5
-            counter = 0
             self.mydll.PrintSFF(sff_resp,0)
-            
+
             if sff_resp.contents.data[1] != 0x30:
                     print("Bad response")
                     return []
 
             #send the remaining data
-            while sent < datalen:
+            for counter, _ in enumerate(range(5, datalen, 6)):
                 firstbyte = 0x20 + ((counter+1) & 0xf)
                 firstdata = [firstbyte] + data[5 + counter*6 : 13 + counter*6]
                 line = "IDH: %02X, IDL: %02X, Len: 08, Data: %02X " % (idh, idl, byte_id)
@@ -89,9 +87,6 @@ class PyEcom:
                 self.mydll.DbgLineToSFF(line, sff_msg)
                 self.mydll.PrintSFF(sff_msg,0)
                 self.mydll.write_message(self.handle, sff_msg)
-                sent += 6
-                counter += 1                
-
         else:
             #print "Single packet"
             line = "IDH: %02X, IDL: %02X, Len: 08, Data: %02X %02X " % (idh, idl, byte_id, len(data))
@@ -167,16 +162,12 @@ class PyEcom:
         #XXX This should really be integrated, but not for now
         if(byte_id):
             return self.send_iso_tp_data_encap(wid, data, byte_id)
-        
+
         sff_msg = pointer(SFFMessage())
         idh = (wid & 0xff00) >> 8
         idl = (wid & 0xff)
 
-        resp_index = 8
-        if(wid in [1,2,3]):
-            resp_index = 1
-        
-
+        resp_index = 1 if (wid in [1,2,3]) else 8
         #multi-packet send
         if len(data) > 7:
             #print "Multi packet"
@@ -185,12 +176,12 @@ class PyEcom:
             datalen = len(data)
 
             # Fix due to Charlie bricking my ECM Booo charlie
-            datalen = datalen & 0x0FFF
+            datalen &= 0x0FFF
             data_bytes = (0x01000 | datalen) & 0x0FFFF
             byteone = (data_bytes >> 8)
             bytetwo = data_bytes & 0xFF
-            
-            firstdata = [byteone, bytetwo] + data[0:6]
+
+            firstdata = [byteone, bytetwo] + data[:6]
             line = "IDH: %02X, IDL: %02X, Len: 08, Data: " % (idh, idl)
             line += self.data_to_line(firstdata, 8)
             self.mydll.DbgLineToSFF(line, sff_msg)
@@ -201,29 +192,22 @@ class PyEcom:
             read_by_wid = self.mydll.read_message_by_wid_with_timeout
             read_by_wid.restype = POINTER(SFFMessage)
             sff_resp = self.mydll.read_message_by_wid_with_timeout(self.handle, wid+resp_index, 1000)
-            sent = 6
-            counter = 0
-
-            if sff_resp:
-                self.mydll.PrintSFF(sff_resp,0)
-                if sff_resp.contents.data[0] != 0x30:
-                        print("Bad response")
-                        return []
-            else:
+            if not sff_resp:
                 return []
 
+            self.mydll.PrintSFF(sff_resp,0)
+            if sff_resp.contents.data[0] != 0x30:
+                    print("Bad response")
+                    return []
             #send the remaining data
-            while sent < datalen:
-                    firstbyte = 0x20 + ((counter+1) & 0xf)
-                    firstdata = [firstbyte] + data[6 + counter*7 : 13 + counter*7]
-                    line = "IDH: %02X, IDL: %02X, Len: 08, Data: " % (idh, idl)
-                    line += self.data_to_line(firstdata, 8)
-                    self.mydll.DbgLineToSFF(line, sff_msg)
-                    self.mydll.PrintSFF(sff_msg,0)
-                    self.mydll.write_message(self.handle, sff_msg)
-                    sent += 7
-                    counter += 1                
-
+            for counter, _ in enumerate(range(6, datalen, 7)):
+                firstbyte = 0x20 + ((counter+1) & 0xf)
+                firstdata = [firstbyte] + data[6 + counter*7 : 13 + counter*7]
+                line = "IDH: %02X, IDL: %02X, Len: 08, Data: " % (idh, idl)
+                line += self.data_to_line(firstdata, 8)
+                self.mydll.DbgLineToSFF(line, sff_msg)
+                self.mydll.PrintSFF(sff_msg,0)
+                self.mydll.write_message(self.handle, sff_msg)
         else:
             #print "Single packet"
             line = "IDH: %02X, IDL: %02X, Len: 08, Data: %02x " % (idh, idl, len(data))
@@ -237,16 +221,12 @@ class PyEcom:
         read_by_wid.restype = POINTER(SFFMessage)
 
         sff_resp = None
-        if(wid in [1,2,3]):
-            if(AckType != None):
-                read_by_wid_ack = self.mydll.read_message_by_wid_get_ack_timeout
-                read_by_wid_ack.restype = POINTER(SFFMessage)
-                sff_resp = self.mydll.read_message_by_wid_get_ack_timeout(self.handle, wid+resp_index, AckType, 1000)
-            else:
-                sff_resp = self.mydll.read_message_by_wid_with_timeout(self.handle, wid+resp_index, 1000)
+        if (wid in [1, 2, 3]) and (AckType != None):
+            read_by_wid_ack = self.mydll.read_message_by_wid_get_ack_timeout
+            read_by_wid_ack.restype = POINTER(SFFMessage)
+            sff_resp = self.mydll.read_message_by_wid_get_ack_timeout(self.handle, wid+resp_index, AckType, 1000)
         else:
             sff_resp = self.mydll.read_message_by_wid_with_timeout(self.handle, wid+resp_index, 1000)
-
         #if you can not read a message, return nothing
         if not sff_resp:
             return []
@@ -264,7 +244,7 @@ class PyEcom:
                         sff_resp = self.mydll.read_message_by_wid_with_timeout(self.handle, wid+1, 1000)
                     else:
                         sff_resp = self.mydll.read_message_by_wid_with_timeout(self.handle, wid+8, 1000)
-                        
+
                     if not sff_resp:
                             return []
                     self.mydll.PrintSFF(sff_resp,0)
@@ -273,7 +253,7 @@ class PyEcom:
         toread = ((first_byte & 0xf) << 8) + sff_resp.contents.data[1]
         total_to_read = toread
         toread -= 6
-     
+
         ret = sff_resp.contents.data[2:]
         self.mydll.DbgLineToSFF("IDH: %02X, IDL: %02X, Len: 08, Data: 30 00 00 00 00 00 00 00" % (idh, idl), sff_msg)
         self.mydll.PrintSFF(sff_msg,0)
@@ -305,7 +285,7 @@ class PyEcom:
         index = 0
 
         ret = self.send_iso_tp_data(wid, data, byte_id)
-            
+
         if not ret:
             return False
 
@@ -323,7 +303,7 @@ class PyEcom:
 
         err = self.get_error(ret)
         if err != 0x00:
-            print("Error: %s" % (NegRespErrStr(err)))
+            print(f"Error: {NegRespErrStr(err)}")
             return False
 
     def toyota_getstatus(self, wid):
@@ -353,35 +333,25 @@ class PyEcom:
         if len(data) % 2 != 0:
             print("TargetData must have an EVEN number of characters")
 
-        j = 0
         total = ""
-        for i in range(0, len(data), 2):
+        for j, i in enumerate(range(0, len(data), 2)):
             byte = data[i:i+2]
 
             val = int(byte, 16)
 
             #checksum style thing?
-            val = val - j
+            val -= j
 
             total += chr(val)
 
-            #each byte is subtracted by the iterator
-            j += 1
-
-        total = int(total, 16)
-
-        #print "%04X" % (total)
-
-        return total
+        return int(total, 16)
 
     def toyota_dword_to_targetdata(self, dword):
 
-        shifter = 28
-        add = 0
         targetdata = ""
 
         #break out each nibble
-        while shifter >= 0:
+        for add, shifter in enumerate(range(28, -1, -4)):
             nibble = (dword >> shifter) & 0xF
 
             str_nibble = "%1X" % (nibble)
@@ -390,15 +360,11 @@ class PyEcom:
 
             targetdata += hex_str_nibble
 
-            add += 1
-            shifter -= 4
-
         print(targetdata)
         return targetdata
 
     def toyota_cracker(self, wid, data=[0x27, 0x01], byte_id=None):
         ret = None
-        i = 0
         found_key = False
         seed = 0x0000
         prev_seed = 0x0000
@@ -410,14 +376,14 @@ class PyEcom:
             return False
 
         resp = self.send_iso_tp_data(wid, data, byte_id)        
-        
+
         if not resp or len(resp) == 0:
             print("No Response")
             return False
 
         err = self.get_error(resp)
         if err != 0x00:
-            print("Error: %s" % (NegRespErrStr(err)))
+            print(f"Error: {NegRespErrStr(err)}")
             return False
 
         #constants when calculating keys are taken from the response
@@ -443,9 +409,7 @@ class PyEcom:
         #i guess start at half the seed is a good place? 
         key_guess = seed / 2
 
-        while(i < 0x20):
-
-            i += 1
+        for _ in range(0x20):
             #break key_guess into 2 pieces
             guess_1 = (key_guess & 0xFF00) >> 8
             guess_2 = key_guess & 0x00FF
@@ -457,13 +421,13 @@ class PyEcom:
                 key_data = [0x27, 0x02, guess_1, guess_2]
 
             resp = self.send_iso_tp_data(wid, key_data, byte_id)
-            if(resp[0] == 0x67):
+            if (resp[0] == 0x67):
                 found_key = True
                 print("Found the KEY: %02X %02X" % (guess_1, guess_2))
             else:
                 err = self.get_error(resp)
-                if err != 0x35 and err != 0x36:           
-                    print("Error: %s" % (NegRespErrStr(err)))
+                if err not in [0x35, 0x36]:           
+                    print(f"Error: {NegRespErrStr(err)}")
                     return False
 
             key_guess = (key_guess + 1) & 0xFFFF
@@ -479,7 +443,7 @@ class PyEcom:
             print("SeedKey Mismatch: SeedLen: %d Number of Secrets: %d" % (len(seed), num_of_secrets))
             return []
 
-        print("Seed: %s" % (self.get_pretty_print(seed)))
+        print(f"Seed: {self.get_pretty_print(seed)}")
         for i in range(0, num_of_secrets):
             #print "%04X" % (PriusSecrets[i])
 
@@ -520,9 +484,9 @@ class PyEcom:
 
         err = self.get_error(resp)
         if err != 0x00:
-            print("Error: %s" % (NegRespErrStr(err)))
+            print(f"Error: {NegRespErrStr(err)}")
             return False
-        elif err == 0x00:
+        else:
             if resp[2] == 0 and resp[3] == 0 and resp[4] == 0 and resp[5] == 0:
                 print("Already authenticated")
                 return True
@@ -538,7 +502,7 @@ class PyEcom:
             key_dword = seed ^ eff_key
 
         #print "Key: %04X" % (key_dword)
-             
+
         #key = self.toyota_key_from_seed(resp[2:6])
         key = [0,0,0,0]
         key[0] = key_dword >> 24 & 0xFF
@@ -552,9 +516,9 @@ class PyEcom:
         seed = self.send_iso_tp_data(wid, key_data, byte_id)
         err = self.get_error(seed)
         if err != 0x00:
-            print("Error: %s" % (NegRespErrStr(err)))
+            print(f"Error: {NegRespErrStr(err)}")
             return False
-            
+
         return True
 
     def routine_control(self, wid, subfunc, routine_id, byte_id=None):
@@ -562,7 +526,7 @@ class PyEcom:
         #break the rountine ID into bytes
         msb_rid = (routine_id >> 8) & 0xFF
         lsb_rid = routine_id & 0xFF
-        
+
         resp = self.send_iso_tp_data(wid, [0x31, subfunc, msb_rid, lsb_rid], byte_id)
         if not resp or len(resp) == 0:
             print("No Response")
@@ -570,7 +534,7 @@ class PyEcom:
 
         err = self.get_error(resp)
         if err != 0x00:
-            print("Error: %s" % (NegRespErrStr(err)))
+            print(f"Error: {NegRespErrStr(err)}")
             return False
 
         return True
@@ -579,10 +543,7 @@ class PyEcom:
     #Size length: 1-byte
     def read_memory_14230(self, wid, address, size, byte_id=None):
         #The total payload sent to the ECU
-        payload = []
-
-        #Add the SID
-        payload.append(0x23)
+        payload = [35]
 
         for i in range(3, 0, -1):
             shifter = (i * 8) - 8
@@ -604,17 +565,10 @@ class PyEcom:
         return True  
 
     def read_memory_14229(self, wid, addrAndLenFormat, address, size, byte_id=None):
-        #The total payload sent to the ECU
-        payload = []
-
-        #Add the SID
-        payload.append(0x23)
-
         #addressAndLengthFormatIdentifier = 1 byte
         #XY => X is the length (in bytes) of the address and y is the length (in bytes) of the address
         alFormat = addrAndLenFormat & 0xFF
-        payload.append(alFormat)
-
+        payload = [35, alFormat]
         #get the size and address length formats
         addr_format = alFormat & 0x0F
         size_format = (alFormat & 0xF0) >> 4 
@@ -644,18 +598,11 @@ class PyEcom:
 
     def request_upload_14229(self, wid, dataFormatID, addrAndLenFormat, address, size, byte_id=None):
 
-        #The total payload for this request
-        payload = []
-
-        #ID for RequestUploadService
-        payload.append(0x35)
-
         #dataFormatIdentifier == 1 byte
         #XY => X is 'compressionMethod' and Y is 'encryptingMethod'
         #00 == no compression or encryption
         fID = dataFormatID & 0xFF
-        payload.append(fID)
-
+        payload = [53, fID]
         #addressAndLengthFormatIdentifier = 1 byte
         #XY => X is the length (in bytes) of the address and y is the length (in bytes) of the address
         alFormat = addrAndLenFormat & 0xFF
@@ -690,10 +637,7 @@ class PyEcom:
     def request_upload_14230(self, wid, dataFormatID, address, size, byte_id=None):
 
         #The total payload for this request
-        payload = []
-
-        #ID for RequestUploadService
-        payload.append(0x35)
+        payload = [53]
 
         for i in range(3, 0, -1):
             shifter = (i * 8) - 8
@@ -724,11 +668,7 @@ class PyEcom:
         return True
 
     def transfer_data(wid, block_seq_counter):
-        payload = []
-        payload.append(0x36)
-
-        payload.append(block_seq_counter)
-
+        payload = [54, block_seq_counter]
         resp = self.send_iso_tp_data(wid, payload, None)
 
         if(not resp or len(resp) == 0):

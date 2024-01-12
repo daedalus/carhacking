@@ -1,10 +1,9 @@
 s_line = "S3210008371065ABCE1F8AB401C8C72967230C6F99B6C84AE25ED793F949CE76CCCC8B"
 
-data_checksum = 0
-s_type = s_line[0:2]
+s_type = s_line[:2]
 s_len = int(s_line[2:4], 16)
 
-data_checksum += s_len
+data_checksum = 0 + s_len
 print("SLen: %02X" % (s_len))
 
 curr_index = 4

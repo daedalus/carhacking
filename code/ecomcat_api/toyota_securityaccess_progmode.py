@@ -14,13 +14,13 @@ if __name__ == "__main__":
     if ret == False:
         print("[!] [0x%04X] Security Access: FAILURE" % (ECU))
         sys.exit(1)
-        
+
     print("[*] [0x%04X] Security Access: Success" % (ECU))
 
     #Unsure but this happens 3x in the capture before diag programming mode
     #I think this may have to do w/ tellin other ECUs the one being reprogrammed
     #is going offline for a while and DO NOT set DTC codes
-    for i in range(0, 3):
+    for _ in range(0, 3):
         ret = ecom.send_iso_tp_data(0x720, [0xA0, 0x27])
 
     #Grequires the to be in half-on state (power on, engine off)
